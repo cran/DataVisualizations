@@ -1,0 +1,34 @@
+useDynLib(DataVisualizations, .registration=TRUE)
+
+export(GoogleMapsCoordinates)
+export(Heatmap)
+export(InspectDistances)
+export(InspectVariable)
+export(PDEscatter)
+export(nanPlot)
+export(PixelMatrixPlot)
+export(SilhouettePlot)
+export(ShepardScatterPlot)
+export(ShepardDensityPlot)
+export(zplot)
+
+
+export(PlotPixMatrix)
+
+import(Rcpp)
+import(ggplot2)
+import(magrittr)
+import(AdaptGauss)
+  importFrom("graphics", "hist", "title")
+  importFrom("stats", "dist", "runif")
+  importFrom("graphics", "filled.contour")
+  importFrom("stats", "median", "quantile")
+    importFrom("graphics", "axis", "barplot", "box", "boxplot", "grid",
+             "mtext", "par", "plot")
+  importFrom("stats", "qqnorm")
+  importFrom("graphics", "rect")
+   importFrom("utils", "data")
+    importFrom("stats", "end")
+   
+   
+   
