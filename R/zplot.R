@@ -1,4 +1,4 @@
-zplot <- function(x,y,z,DrawTopView = T,NrOfContourLines = 20, TwoDplotter = 'native', xlim, ylim){
+zplot <- function(x,y,z,DrawTopView = TRUE,NrOfContourLines = 20, TwoDplotter = 'native', xlim, ylim){
 #    plotobject = zplot(x,y,z)
 #    plotobject = zplot(x,y,z,DrawTopView,NrOfContourLines,TwoDplotter)
 #    plots z above xy plane as mountain
@@ -14,6 +14,12 @@ zplot <- function(x,y,z,DrawTopView = T,NrOfContourLines = 20, TwoDplotter = 'na
 #    plotobject             as returned by plotting routines
 #    taken from matlabs 2005 version of ALU
 #    Implemented in R: FP 3/2016
+  isnumber=function(x) return(is.numeric(x)&length(x)==1)
+  
+  if(!isnumber(NrOfContourLines))
+    stop('"NrOfContourLines" is not a numeric number of length 1. Please change Input.')
+  
+
   if(!is.vector(x)){
     x=as.vector(x)
     warning('x is not a vector. Calling as.vector()')
@@ -76,7 +82,7 @@ zplot <- function(x,y,z,DrawTopView = T,NrOfContourLines = 20, TwoDplotter = 'na
 
 
 
-  if(!DrawTopView){
+  if(!isTRUE(DrawTopView)){
 
     #### Option 1: Plotly. Plotly ist ein im Backend auf Javascript basierendes Plotingframework
     xaxis = list(title = "X")
@@ -87,7 +93,7 @@ zplot <- function(x,y,z,DrawTopView = T,NrOfContourLines = 20, TwoDplotter = 'na
 requireNamespace('plotly')
     # Aus Gruenden erwartet plotly die Matrix transponiert zur R implementation
     return(plotly::plot_ly(x = fld$x, y = fld$y, z = t(fld$z), type="surface", colors = DataVisualizations::PmatrixColormap) %>%
-       plotly::layout(xaxis = xaxis, yaxis = yaxis, zaxis = zaxis))
+      plotly::layout(scene =list(xaxis = xaxis, yaxis = yaxis, zaxis = zaxis)))
     ####
 
     #### Option 2: rgl. Kann GAR keine colormaps?

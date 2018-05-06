@@ -1,4 +1,4 @@
-PDEscatter=function(x,y,paretoRadius=0,maximumNoSamples=1000,
+PDEscatter=function(x,y,na.rm=FALSE,paretoRadius=0,sampleSize=5000,
                               
                               NrOfContourLines=20,Plotter='native', DrawTopView = T,
                               
@@ -9,9 +9,10 @@ PDEscatter=function(x,y,paretoRadius=0,maximumNoSamples=1000,
 #  plot the PDE on top of a scatterplot
 #
 #  INPUT
-#  x(1:n)          data in x dimension
-#  y(1:n)          data in y dimension
+#  x[1:n]                  First feature
+#  y[1:n]                  Second feature
 #  OPTIONAL
+#  na.rm                   Function may not work with non finite values. If these cases should be automatically removed, set parameter TRUE
 #  ParetoRadius            The Pareto Radius; if ==0 or not given it will be calculated by ParetoRadius
 #  NrOfContourLines        Number of contour lines to be drawn
 #  kernelfactor            Factor to modify the resolution of the grid used to create the plot. Default: 1. Warning: This can increase runtime extremely!
@@ -26,30 +27,33 @@ PDEscatter=function(x,y,paretoRadius=0,maximumNoSamples=1000,
 #  ParetoRadius            ParetoRadius used for PDEscatter.
 #  Handle                  Handle of the plot object. NULL if native R plot is used.
 #
-#  Author ALU 2004
-#  Rewrite in R Felix Pape 01/2016
+#  Author in matlab: ALU 2004
+#  Rewrite in R with improved logic Felix Pape 01/2016
 #
 
 #  requireRpackage('reshape2')
   #requireRpackage('akima')
  # requireRpackage('plotly')
   ##############
-  if(!is.vector(x)){
-    x=as.vector(x)
-    warning('x is not a vector. Calling as.vector()')
+  if(isTRUE(na.rm)){
+    tmp=cbind(x,y)
+    tmp=tmp[complete.cases(tmp),]
+    x=tmp[,1]
+    y=tmp[,2]
   }
-  if(!is.numeric(x)){
-    x=as.numeric(x)
-    warning('x is not a numeric. Calling as.numeric()')
-  }
-  if(!is.vector(y)){
-    y=as.vector(y)
-    warning('y is not a vector. Calling as.vector()')
-  }
-  if(!is.numeric(y)){
-    y=as.numeric(y)
-    warning('y is not a numeric. Calling as.numeric()')
-  }
+  x=checkFeature(x,'x')
+  y=checkFeature(y,'y')
+  isnumber=function(x) return(is.numeric(x)&length(x)==1)
+
+  if(!isnumber(paretoRadius))
+    stop('"paretoRadius" is not a numeric number of length 1. Please change Input.')
+
+  if(!isnumber(sampleSize))
+    stop('"sampleSize" is not a numeric number of length 1. Please change Input.')
+  
+  if(!isnumber(NrOfContourLines))
+    stop('"NrOfContourLines" is not a numeric number of length 1. Please change Input.')
+  
   prctile =function (x, p) 
   {
     if (length(p) == 1) {
@@ -123,9 +127,9 @@ PDEscatter=function(x,y,paretoRadius=0,maximumNoSamples=1000,
 	##########
 	# Wenn mehr Daten als gewollt da sind: Sample ziehen.
 	##########
-	if (maximumNoSamples<nData) { # sample with uniform distribution MaximumNrSamples
-	  #warning('More Data than maximumNoSamples. Consider raising maximumNoSamples or using PDEscatterApprox')
-	  sampleInd <- floor(nData*c(runif(maximumNoSamples))+1)
+	if (sampleSize<nData) { # sample with uniform distribution MaximumNrSamples
+	  #warning('More Data than sampleSize. Consider raising sampleSize or using PDEscatterApprox')
+	  sampleInd <- floor(nData*c(runif(sampleSize))+1)
 	  sampleData = percentdata[sampleInd,]
 	} else {
 	  sampleData = percentdata
@@ -162,7 +166,7 @@ PDEscatter=function(x,y,paretoRadius=0,maximumNoSamples=1000,
 
 	  },'native'={
 	    title(main = main, xlab = xlab, ylab = ylab)
-	    plt <- NULL
+	    plt <- 'Native does not have a Handle'
 	  }, 'plotly'={
 	  requireNamespace('plotly')
 	    plt <- plt %>% plotly::layout(xaxis= list(title=xlab),
@@ -170,7 +174,28 @@ PDEscatter=function(x,y,paretoRadius=0,maximumNoSamples=1000,
 	                                  title= main)
 
 	  })
+	}else{
+	  switch(Plotter,'ggplot'={
+      print('Plotly plot is used because ggplot is not implemented for option DrawTopView=FALSE.')
+	    requireNamespace('plotly')
+	    plt <- plt %>% plotly::layout(scene=list(xaxis= list(title=xlab),
+	                                             yaxis= list(title=ylab),zaxis= list(title='PDE'),
+	                                             title= main))
+	  },'native'={
+	    print('Plotly plot is used because native is not implemented for option DrawTopView=FALSE.')
+	    requireNamespace('plotly')
+	    plt <- plt %>% plotly::layout(scene=list(xaxis= list(title=xlab),
+	                                             yaxis= list(title=ylab),zaxis= list(title='PDE'),
+	                                             title= main))
+	  }, 'plotly'={
+	    requireNamespace('plotly')
+	    plt <- plt %>% plotly::layout(scene=list(xaxis= list(title=xlab),
+	                                  yaxis= list(title=ylab),zaxis= list(title='PDE'),
+	                                  title= main))
+	    
+	  })
 	}
-	return (list(AnzInPSpheres=inPSpheres,ParetoRadius=paretoRadius,Handle=plt))
+	
+	return(invisible(list(AnzInPSpheres=inPSpheres,ParetoRadius=paretoRadius,Handle=plt)))
 }
 

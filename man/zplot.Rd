@@ -7,7 +7,7 @@ Plotting for 3 dimensional data
 Plots z above xy plane as 3D mountain or 2D contourlines
 }
 \usage{
-zplot(x, y, z, DrawTopView = T, NrOfContourLines = 20,
+zplot(x, y, z, DrawTopView = TRUE, NrOfContourLines = 20,
 
                  TwoDplotter = "native", xlim, ylim)
 }

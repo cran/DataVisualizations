@@ -120,7 +120,7 @@ SilhouettePlot = function(DataOrDistances, Cls=NULL,method= "euclidean",PlotIt=T
     cnames = ''
   }
   
-  if (PlotIt) {
+  if (isTRUE(PlotIt)){
     barplot(
       rev(bars),
       width = 1,

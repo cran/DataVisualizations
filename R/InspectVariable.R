@@ -17,6 +17,14 @@ InspectVariable=function(Feature,N='Feature',i=1,xlim,ylim,sampleSize=100000,mai
 # uses histopt()
 #
 # MT 11/2014
+  isnumber=function(x) return(is.numeric(x)&length(x)==1)
+  
+  if(!isnumber(i))
+    stop('"i" is not a numeric number of length 1. Please change Input.')
+  
+  if(!isnumber(sampleSize))
+    stop('"sampleSize" is not a numeric number of length 1. Please change Input.')
+  
   if(!is.vector(Feature)){
     Feature=as.vector(Feature)
     warning('Feature is not a vector. Calling as.vector()')

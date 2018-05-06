@@ -1,4 +1,4 @@
-PixelMatrixPlot=PlotPixMatrix =  function(Data, XNames = NULL, LowLim, HiLim, YNames = NULL, main = '') {
+PixelMatrixPlot=PlotPixMatrix =  function(Data, XNames = NULL, LowLim, HiLim, YNames = NULL, main = '',FillNotFiniteWithHighestValue=FALSE) {
     #PixelMatrixPlot = function(Data, XNames=NULL, LowLim=NULL, HiLim=NULL, YNames=NULL,main='')
     # PixelMatrixPlot(Data,XNames,LowLim,HiLim,YNames);
     #  plot Data matrix as a pixel colour picture
@@ -24,15 +24,22 @@ PixelMatrixPlot=PlotPixMatrix =  function(Data, XNames = NULL, LowLim, HiLim, YN
   }
   heatC = DataVisualizations::HeatmapColors
     
-    if (missing(LowLim))
+  if (missing(LowLim))
       LowLim = min(Data, na.rm = T)
-    if (missing(HiLim))
+  if (missing(HiLim))
       HiLim = max(Data, na.rm = T)
     
-    if(HiLim <= LowLim){
+  isnumber=function(x) return(is.numeric(x)&length(x)==1)  
+  if(!isnumber(HiLim))
+    stop('"HiLim" is not a numeric number of length 1. Please change Input.')
+  
+  if(!isnumber(LowLim))
+    stop('"LowLim" is not a numeric number of length 1. Please change Input.')
+  
+  if(HiLim <= LowLim){
       warning("HiLim should be bigger than LowLim, setting HiLim = LowLim + 0.1")
       HiLim = LowLim + 0.1
-    }
+  }
     
     if (is.vector(Data)) {
       Data <- as.matrix(Data)
@@ -45,14 +52,14 @@ PixelMatrixPlot=PlotPixMatrix =  function(Data, XNames = NULL, LowLim, HiLim, YN
     Data[hiind] = HiLim
     lowind = which(Data <= LowLim)
     Data[lowind] = LowLim
-    
-    if(any(!is.finite(Data))){ # vom Prinzip aus Matlab uebernommen
-      Delta = (HiLim - LowLim) / 64
-      Value4NaN = HiLim + Delta
-      Data[which(Data == HiLim)] = HiLim - Delta
-      Data[which(!is.finite(Data))] = Value4NaN
+    if(isTRUE(FillNotFiniteWithHighestValue)){
+      if(any(!is.finite(Data))){ # vom Prinzip aus Matlab uebernommen
+        Delta = (HiLim - LowLim) / 64
+        Value4NaN = HiLim + Delta
+        Data[which(Data == HiLim)] = HiLim - Delta
+        Data[which(!is.finite(Data))] = Value4NaN
+      }
     }
-    
     df <- data.frame(Data)
     if (!is.null(XNames)) {
       names(df) <- XNames
@@ -70,7 +77,7 @@ PixelMatrixPlot=PlotPixMatrix =  function(Data, XNames = NULL, LowLim, HiLim, YN
     #aes_string only works if you dont modify your features in ggplot2 (e.g. not logarithmize them)
     plt <-
       ggplot(dfm, aes_string(y = 'id', x = 'variable', fill = 'value')) + geom_tile() +
-      scale_fill_gradientn(colours = heatC) +
+      scale_fill_gradientn(colours = heatC,na.value = 'black') +
       theme(
         panel.background = element_blank(),
         legend.key = element_blank(),

@@ -35,7 +35,7 @@ ShepardScatterPlot =ShepardDiagram=function(InputDists,OutputDists,xlab='Input D
   plt1 <- gPlot + geom_point(data = df, aes_string("x = InDist", "y = OutDist")) +
     ylab(ylab)+xlab(xlab)+ggtitle(main)#+
     #geom_line(data = df, aes(x = InDist, y = InDist),color='red')
-if(fancy){
+if(isTRUE(fancy)){
   plt1=plt1+
     theme(panel.background = element_blank(), legend.key = element_blank(),axis.line =element_line(colour='black'),
           axis.title.y = element_text(size = rel(2), angle = 90),

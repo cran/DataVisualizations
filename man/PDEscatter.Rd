@@ -2,10 +2,10 @@
 \alias{PDEscatter}
 \title{Scatter Density Plot}
 \description{
-Pareto density estimation [Ultsch, 2005] used for a scatter density plot
+Pareto density estimation (PDE) [Ultsch, 2005] used for a scatter density plot. 
 }
 \usage{
-PDEscatter(x,y,paretoRadius=0,maximumNoSamples=1000,
+PDEscatter(x,y,na.rm=FALSE,paretoRadius=0,sampleSize=5000,
 
 NrOfContourLines=20,Plotter='native', DrawTopView = T,
 
@@ -14,13 +14,16 @@ xlab="X", ylab="Y", main="PDEscatter",
 xlim, ylim, Legendlab_ggplot="value")
 }
 \details{
+The \code{PDEscatter} function generates the density of the xy data as a z coordinate. Afterwards xyz will be plotted either as a contour plot or a 3d plot. 
+This function plots the PDE on top of a scatterplot. Variances of x and y should not differ by extreme numbers, otherwise calculate the percentiles on both first.
 The method was succesfully used in [Thrun, 2018; Thrun/Ultsch 2018].
 }
 \arguments{
-  \item{x}{Numeric vector, data in x dimension.}
-  \item{y}{Numeric vector, data in y dimension.}
+  \item{x}{Numeric vector, first feature (for x axis values)}
+  \item{y}{Numeric vector, second feature (for y axis values)}
+  \item{na.rm}{Function may not work with non finite values. If these cases should be automatically removed, set parameter TRUE}
   \item{paretoRadius}{Numeric, the Pareto Radius. If omitted (or 0), calculate by paretoRad.}
-  \item{maximumNoSamples}{Numeric, maximum size of the sample used for calculation. High values increase runtime significantly.}
+  \item{sampleSize}{Numeric, maximum size of the sample used for calculation. High values increase runtime significantly.}
   \item{NrOfContourLines}{Numeric, number of contour lines to be drawn. 20 by default.}
   \item{Plotter}{String, name of the plotting backend to use. Possible values are: "native", "ggplot", "plotly"}
   \item{DrawTopView}{Boolean, True means contur is drawn, otherwise a 3D plot is drawn. Default: True}
@@ -38,15 +41,14 @@ The method was succesfully used in [Thrun, 2018; Thrun/Ultsch 2018].
     \item{Legendlab_ggplot}{String, in case of \code{Plotter="ggplot"} label for the legend. Default: "value"}
 }
 \note{
-This function generates the density of the xy data as a z coordinate. Afterwards xyz will be plotted either as a contour plot or a 3d plot.
-
-This function plots the PDE on top of a scatterplot. Variances of x and y should not differ by extreme numbers, otherwise calculate the percentiles on both first.
+If \code{DrawTopView=FALSE} only the plotly option is currently available. If another option is chosen, the method switches automatically there.
 }
+
 \value{
  List of:
   \item{AnzInPSpheres}{Number of points within the ParetoRadius of each point}
   \item{ParetoRadius}{ParetoRadius used for PDEscatter}
-  \item{Handle}{Handle of the plot object. NULL if native R plot is used}
+  \item{Handle}{Handle of the plot object. Information-string if native R plot is used.}
 
 }
 \references{

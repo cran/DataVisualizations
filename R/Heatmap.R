@@ -22,6 +22,8 @@
    if (missing(Cls))
      Cls = rep(1, AnzData)
    
+   Cls=checkCls(Cls,AnzData)
+   #print(Cls)
    #MT: Reihenfolge muss unbedingt fest sein ab hier, sie unten
    ind = order(Cls,decreasing = F,na.last = T)
    
@@ -42,11 +44,16 @@
      DataDists = as.matrix(dist(DataOrDistances, method = method, diag =TRUE))
      #DataDists = DistanceMatrix(DataOrDistances, method = method)
    }
+
+   if (missing(HiLim)){}
+     HiLim = max(DataDists,na.rm=T)
+     
+  isnumber=function(x) return(is.numeric(x)&length(x)==1)  
+   if(!isnumber(HiLim))
+     stop('"HiLim" is not a numeric number of length 1. Please change Input.')
    
-   if (missing(HiLim))
-     HiLim = max(DataDists)
-   
-   
+   if(!isnumber(LowLim))
+     stop('"LowLim" is not a numeric number of length 1. Please change Input.')
    # Zeichnen
    #MT: sollte in der selbenreihenfolge sein wie anordnung der cls welche daten anordnet
    Vunique = sort(unique(Cls),decreasing = F,na.last = T)

@@ -42,7 +42,19 @@ GoogleMapsCoordinates=function(Longitude,Latitude,Cls=rep(1,length(Longitude)),z
     Longitude=as.numeric(Latitude)
     warning('Latitude is not a numeric')
   }
-
+  
+  isnumber=function(x) return(is.numeric(x)&length(x)==1)  
+  if(!isnumber(zoom))
+    stop('"zoom" is not a numeric number of length 1. Please change Input.')
+  
+  if(!isnumber(stroke))
+    stop('"stroke" is not a numeric number of length 1. Please change Input.')
+  
+  if(!isnumber(size))
+    stop('"size" is not a numeric number of length 1. Please change Input.')
+  
+  Cls=checkCls(Cls,length(Longitude))
+  
   requireNamespace('ggmap')
   requireNamespace('ggplot2')
   

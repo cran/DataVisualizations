@@ -11,7 +11,7 @@ ShepardDensityPlot(InputDists, OutputDists, Plotter = "native",
 
 xlab ="Input Distances", ylab = "Output Distances", 
 
-main = "ProjectionMethod",maximumNoSamples)
+main = "ProjectionMethod",sampleSize)
 }
 \arguments{
   \item{InputDists}{[1:n,1:n] with n cases of data in d variables/features:
@@ -32,7 +32,7 @@ see \code{PDEscatter} for details
   \item{main}{
 Title of the Shepard diagram
 }
-\item{maximumNoSamples}{Optional, default(50000),  reduces a.ount of data for density estimation, if too many distances given}
+\item{sampleSize}{Optional, default(50000),  reduces a.ount of data for density estimation, if too many distances given}
 }
 \details{
 Introduced and described in [Thrun, 2018, p. 63] with examples in [Thrun, 2018, p. 71-72]}

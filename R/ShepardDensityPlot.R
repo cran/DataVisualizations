@@ -1,4 +1,4 @@
-ShepardDensityPlot=function(InputDists,OutputDists,Plotter='native',xlab='Input Distances',ylab='Output Distances',main='ProjectionMethod', maximumNoSamples=50000){
+ShepardDensityPlot=function(InputDists,OutputDists,Plotter='native',xlab='Input Distances',ylab='Output Distances',main='ProjectionMethod', sampleSize=50000){
   #  Plotter                 Plotting Backend to use. 
   #                          Possible values are: native, ggplot, plotly
   #
@@ -29,8 +29,8 @@ ShepardDensityPlot=function(InputDists,OutputDists,Plotter='native',xlab='Input 
   if(xn!=yn) stop('Number of distances is not equal')
   
  
-  if(xn>maximumNoSamples){
-    ind=sample(size = maximumNoSamples,replace = F,x = 1:xn)
+  if(xn>sampleSize){
+    ind=sample(size = sampleSize,replace = F,x = 1:xn)
     print('Too many distances. Drawing sample.')
 		plot(x[ind],y[ind],xlab='Input',ylab='Output',main='shepard diagram')
     ggobject=PDEscatter(x[ind],y[ind],Plotter=Plotter,xlab=xlab, ylab=ylab, main=main)$Handle
