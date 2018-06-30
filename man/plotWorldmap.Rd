@@ -50,23 +50,7 @@ Originally 'mappinghacks.com/data/TM_WORLD_BORDERS_SIMPL-0.2.zip', now available
 \author{
 Michae Thrun
 }
-\note{
-One open issue posted to R-package-devel. The correct call is
-'sp:::plot.SpatialPolygons(world_country_polygons,col =cols,...)'
 
-However this produced the Note: 
-"
-checking dependencies in R code ... NOTE
-Unexported object imported by a ':::' call: 'sp:::plot.SpatialPolygons'
-See the note in ?':::' about the use of this operator.
-"
- 
-If someone knows a better solution to this please mail me at info (at) deepbionics.org.
-
-Currently using the work-around of
-\url{https://stat.ethz.ch/pipermail/r-devel/2013-August/067210.html}
-
-}
 \examples{
 # data from [Thrun, 2018]
 Cls=c(1L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 
@@ -98,9 +82,7 @@ Codes=c("AFG", "AGO", "ALB", "ARG", "ATG", "AUS", "AUT", "BDI", "BEL",
 "SWZ", "SYC", "SYR", "TCD", "TGO", "THA", "TON", "TTO", "TUN", 
 "TUR", "TWN", "TZA", "UGA", "URY", "USA", "VCT", "VEN", "VNM", 
 "VUT", "WSM", "ZAF", "ZAR", "ZMB", "ZWE")
-\donttest{
 plotWorldmap(Codes,Cls)
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -35,6 +35,7 @@ inPSphere2D = function(data,paretoRadius=NULL){
 	
 	xBinWidth = paretoRadius
 	yBinWidth = paretoRadius
+
 #  Kachel Grenzen ausrechenen
 	xedge = seq(xMin,(xMax+xBinWidth),by=xBinWidth)
 	yedge = seq(yMin,(yMax+yBinWidth),by=yBinWidth)

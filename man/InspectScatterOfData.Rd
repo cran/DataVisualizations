@@ -32,7 +32,7 @@ Michael Thrun
 
 \examples{
 Data=cbind(rnorm(100, mean = 2, sd = 3  ),rnorm(100,mean = 0, sd = 1),rnorm(100,mean = 6, sd = 0.5))
-InspectScatterOfData(Data)
+#InspectScatterOfData(Data)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

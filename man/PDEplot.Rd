@@ -46,13 +46,11 @@ PDEplot(data, paretoRadius = 0, weight = 1, kernels = NULL,
 \examples{
 x <- rnorm(1000, mean = 0.5, sd = 0.5)
 y <- rnorm(750, mean = -0.5, sd = 0.75)
-plt <- PDEplot(x, color = "red")$ggPlot
+\donttest{plt <- PDEplot(x, color = "red")$ggPlot
 plt <- PDEplot(y, color = "blue", ggPlot = plt)$ggPlot
-
-# Second Example
-\donttest{
-  ggplotObj=ggplot()
-  for(i in 1:length(Variables))
-     ggplotObj=PDEplot(Data[,i],ggPlot = ggplotObj)$ggPlot
 }
+# Second Example
+#  ggplotObj=ggplot()
+#  for(i in 1:length(Variables))
+#     ggplotObj=PDEplot(Data[,i],ggPlot = ggplotObj)$ggPlot
 }
