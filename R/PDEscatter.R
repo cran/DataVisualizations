@@ -97,10 +97,16 @@ PDEscatter=function(x,y,na.rm=FALSE,paretoRadius=0,sampleSize=round(sqrt(5000000
   }
   
   ######
+  if(isTRUE(na.rm)){ #achtung irgendwas stimmt hier nicht
+    noNaNInd <- which(is.finite(x)&is.finite(y))
+    x <- x[noNaNInd]
+    y <- y[noNaNInd]
+  }
+  
   if(missing(xlim))
-    xlim = c(min(x), max(x))
+    xlim = c(min(x,na.rm = T), max(x,na.rm = T))
   if(missing(ylim))
-    ylim = c(min(y), max(y))
+    ylim = c(min(y,na.rm = T), max(y,na.rm = T))
 
   # if(isTRUE(na.rm)){
   #   tmp=cbind(x,y)
@@ -109,11 +115,7 @@ PDEscatter=function(x,y,na.rm=FALSE,paretoRadius=0,sampleSize=round(sqrt(5000000
   #   y=tmp[,2]
   # }
   #NAN removal
-  if(isTRUE(na.rm)){ #achtung irgendwas stimmt hier nicht
-  	noNaNInd <- which(is.finite(x)&is.finite(y))
-  	x <- x[noNaNInd]
-  	y <- y[noNaNInd]
-  }
+
 	data <- cbind(x,y)
 	percentdata <- toRange(data,0,100)
 	nData <- length(x)
@@ -179,7 +181,7 @@ PDEscatter=function(x,y,na.rm=FALSE,paretoRadius=0,sampleSize=round(sqrt(5000000
 	    plt <- 'Native does not have a Handle'
 	  }, 'plotly'={
 	  requireNamespace('plotly')
-	    plt <- plt %>% plotly::layout(xaxis= list(title=xlab),
+	    plt <- plotly::layout(plt,xaxis= list(title=xlab),
 	                                  yaxis= list(title=ylab),
 	                                  title= main)
 
@@ -188,18 +190,18 @@ PDEscatter=function(x,y,na.rm=FALSE,paretoRadius=0,sampleSize=round(sqrt(5000000
 	  switch(Plotter,'ggplot'={
       print('Plotly plot is used because ggplot is not implemented for option DrawTopView=FALSE.')
 	    requireNamespace('plotly')
-	    plt <- plt %>% plotly::layout(scene=list(xaxis= list(title=xlab),
+	    plt <- plotly::layout(plt,scene=list(xaxis= list(title=xlab),
 	                                             yaxis= list(title=ylab),zaxis= list(title='PDE'),
 	                                             title= main))
 	  },'native'={
 	    print('Plotly plot is used because native is not implemented for option DrawTopView=FALSE.')
 	    requireNamespace('plotly')
-	    plt <- plt %>% plotly::layout(scene=list(xaxis= list(title=xlab),
+	    plt <- plotly::layout(plt,scene=list(xaxis= list(title=xlab),
 	                                             yaxis= list(title=ylab),zaxis= list(title='PDE'),
 	                                             title= main))
 	  }, 'plotly'={
 	    requireNamespace('plotly')
-	    plt <- plt %>% plotly::layout(scene=list(xaxis= list(title=xlab),
+	    plt <- plotly::layout(plt,scene=list(xaxis= list(title=xlab),
 	                                  yaxis= list(title=ylab),zaxis= list(title='PDE'),
 	                                  title= main))
 	    

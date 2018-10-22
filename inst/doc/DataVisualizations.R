@@ -37,7 +37,7 @@ ggplot2::ggplot(DF, mapping = ggplot2::aes_string(y = 'ITS',x='ID')) + ggplot2::
 
 #Shortcut for several features
 MTY[MTY>8000]=8000 #Disregard outliers after deeper analysis, see publication
-PDEviolinPlot(cbind(ITS,MTY))
+MDplot(cbind(ITS,MTY))
 
 ## ------------------------------------------------------------------------
 library(DataVisualizations)

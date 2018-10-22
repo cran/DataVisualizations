@@ -1,6 +1,6 @@
-PDEviolinPlot <- function(Data, Names){
-  #PDEviolinPlot(data, Names)
-  # Plots a Boxplot for each column of the given data
+MDplot = PDEviolinPlot = function(Data, Names,fill='darkblue',scale='width',size=0.01){
+  #MDplot(data, Names)
+  # Plots a Boxplot like pdfshape for each column of the given data
   #
   # Input
   # data          Matrix containing data. Each column is one variable.
@@ -12,8 +12,16 @@ PDEviolinPlot <- function(Data, Names){
   #
   # Author MT 2018: rewritten function of FP
   if (is.vector(Data)) {
-    warning("This boxplot is for several features at once.Calling as.matrix()")
+    warning("This MD-plot is for several features at once. Calling as.matrix()")
     Data = as.matrix(Data)
+  }
+  if(!is.matrix(Data)){
+    warning('The MD-plot prefers a numerical matrix. If a data.frame is used it is transformed to a matrix. Calling as.matrix.')
+  Data=as.matrix(Data)
+  }
+  if(mode(Data)!='numeric'){
+    warning('"mode" of matrix is not numeric. Casting to numeric.')
+    mode(Data)='numeric'
   }
   if (missing(Names)) {
     if (!is.null(colnames(Data))) {
@@ -31,6 +39,7 @@ PDEviolinPlot <- function(Data, Names){
   }
 
   requireNamespace("reshape2")
+  requireNamespace("ggExtra")
   dataframe = reshape2::melt(Data)
   colnames(dataframe) <- c('ID', 'Variables', 'Values')
   dataframe$Variables=as.character(dataframe$Variables)
@@ -38,7 +47,7 @@ PDEviolinPlot <- function(Data, Names){
     plot <-
       ggplot(data = dataframe,
              aes_string(x = "Variables", group = "Variables", y = "Values")) +
-      geom_violin(stat = "PDEdensity",fill='black',scale='width')
+      geom_violin(stat = "PDEdensity",fill=fill,scale=scale,size=size)+ theme(axis.text.x = element_text(size=rel(1.2)))
 
-  return(ggplotObj = plot+ theme(axis.text.x = element_text(angle = 45, hjust = 1,size=rel(1.2))))
+  return(ggplotObj = plot+ggExtra::rotateTextX())
 } 
