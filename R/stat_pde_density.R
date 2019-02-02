@@ -3,7 +3,7 @@ stat_pde_density <- function(mapping = NULL,
                              geom = "violin",
                              position = "dodge",
                              ...,
-                             trim = TRUE,
+                             trim = TRUE, #enden des violins werden korrekt angezeigt und nicht ueber den wertebereich fortgesetzt
                              scale = "area",
                              na.rm = FALSE,
                              show.legend = NA,
@@ -34,7 +34,7 @@ compute_pdedensity <- function(x) {
   
   # if less than 2 points return data frame of NAs and a warning
   if (nx < 2) {
-    warning("Groups with fewer than two data points have been dropped.",
+    warning("stat_pde_density: Groups with fewer than two data points have been dropped.",
             call. = FALSE)
     return(
       data.frame(
@@ -50,8 +50,8 @@ compute_pdedensity <- function(x) {
   ##MT: chatch error of one unique value
   Flag <- FALSE
   if (length(unique(x)) == 1) {
-    warning('Only one unique value in Data.')
-    x <- c(x, head(x, 1) * runif(1, 0.999, 1.001))
+    warning('stat_pde_density: Only one unique value in Data.')
+    x <- c(unique(x), head(x, 1) * runif(1, 0.999, 1.001))
     Flag <- TRUE
   }
   

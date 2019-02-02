@@ -15,7 +15,7 @@
 ## ----fig.width=5, fig.height=5-------------------------------------------
 library(DataVisualizations)
 data("Lsun3D")
-PixelMatrixPlot(Lsun3D$Data)
+Pixelmatrix(Lsun3D$Data)
 
 ## ------------------------------------------------------------------------
 library(DataVisualizations)
@@ -53,7 +53,7 @@ Data=cbind(Lsun3D$Data,runif(n),rnorm(n),rt(n,2),rlnorm(n),rchisq(100,2))
 Header=c('x','y','z','uniform','gauss','t','log-normal','chi')
 cc=cor(Data,method='spearman')
 diag(cc)=0
-PixelMatrixPlot(cc,YNames = Header,XNames = Header,main = 'Spearman Coeffs')
+Pixelmatrix(cc,YNames = Header,XNames = Header,main = 'Spearman Coeffs')
 
 ## ------------------------------------------------------------------------
 library(DataVisualizations)
@@ -91,14 +91,14 @@ Codes=c("AFG", "AGO", "ALB", "ARG", "ATG", "AUS", "AUT", "BDI", "BEL",
 "SWZ", "SYC", "SYR", "TCD", "TGO", "THA", "TON", "TTO", "TUN", 
 "TUR", "TWN", "TZA", "UGA", "URY", "USA", "VCT", "VEN", "VNM", 
 "VUT", "WSM", "ZAF", "ZAR", "ZMB", "ZWE")
-plotWorldmap(Codes,Cls)
+Worldmap(Codes,Cls)
 
 ## ----fig.width=5, fig.height=5-------------------------------------------
 library(DataVisualizations)
 data(categoricalVariable)
-fanPlot(categoricalVariable)
+Fanplot(categoricalVariable)
 
-pieChart(categoricalVariable)
+Piechart(categoricalVariable)
 
 ## ----warning=FALSE, comment=FALSE----------------------------------------
 library(DataVisualizations)
@@ -106,7 +106,7 @@ data("Lsun3D")
 
 Heatmap(Lsun3D$Data,Lsun3D$Cls,method = 'euclidean')
 
-SilhouettePlot(Lsun3D$Data,Lsun3D$Cls,PlotIt = T)
+Silhouetteplot(Lsun3D$Data,Lsun3D$Cls,PlotIt = T)
 
 ## ----fig.width=4, fig.height=4,warning=FALSE-----------------------------
 library(DataVisualizations)
