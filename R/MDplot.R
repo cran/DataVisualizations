@@ -1,7 +1,7 @@
 MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None",Fill='darkblue',
                                   RobustGaussian=TRUE,GaussianColor='magenta',Gaussian_lwd=1.5,
                                   BoxPlot=FALSE,BoxColor='darkred',MDscaling='width',Size=0.01,
-                                  MinimalAmoutOfData=40,OnlyPlotOutput=TRUE){
+                                  MinimalAmoutOfData=40, MinimalAmoutOfUniqueData=12,SampleSize=5e+05,OnlyPlotOutput=TRUE){
   #MDplot(data, Names)
   # Plots a Boxplot like pdfshape for each column of the given data
   #
@@ -18,7 +18,9 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   #always required:
   requireNamespace("reshape2")
 
-  MinimalAmoutOfUniqueData=12
+
+  
+ 
   ## Error Catching ----
   if (is.vector(Data)) {
     print("This MD-plot is typically for several features at once. By calling as.matrix(), it will be now used with one feature.")
@@ -35,15 +37,64 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   dvariables=ncol(Data)
 
   Ncases=nrow(Data)
+  
+  if(Ncases>SampleSize){
+    warning('Data has more cases than "SampleSize". Drawing a sample for faster computation.
+            You can omit this by setting "SampleSize=nrow(Data".')
+    if(isTRUE(requireNamespace('rowr'))){
+    #here only finite values are sampled
+    indmat=matrix(0,nrow = SampleSize,ncol = dvariables)
+    for(i in 1:dvariables){
+      ind=which(is.finite(Data[,i]))
+      if(length(ind)>=SampleSize){
+        indmat[,i]=sample(ind,size = SampleSize)
+      }else{
+        indmat[1:length(ind),i]=ind
+      }
+    }
+    DataListtemp=mapply(FUN = function(x,y) return(x[y]), as.list(as.data.frame(Data))
+                ,as.list(as.data.frame(indmat)),SIMPLIFY = FALSE)
+    
+    addcols=function(...){
+      return(rowr::cbind.fill(...,fill = NaN))
+    }
+    nn=colnames(Data)
+    Data=do.call(addcols,DataListtemp)
+    colnames(Data)=nn
+    Data=as.matrix(Data)
+    }else{#here alle vectors are sampled
+      warning('Package rowr is not installed. Sampling Data without taking finite values only into account.')
+      ind=sample(1:Ncases,size = SampleSize)
+      Data=Data[ind,,drop=FALSE]
+    }
+    Ncases=nrow(Data)
+  }
+  Nfinitepervar=apply(Data,MARGIN = 2,function(x) {
+    return(sum(is.finite(x)))
+  })
+  if(any(Nfinitepervar<1)){
+    warning('Some columns have not even one finite value. Please check your data. Deleting these columns.')
+    Data=Data[,Nfinitepervar>0]
+    dvariables=ncol(Data)
+  }
+  
   Npervar=apply(Data,MARGIN = 2,function(x) sum(is.finite(x)))
   NUniquepervar=apply(Data,MARGIN = 2,function(x) {
     x=x[is.finite(x)]
     return(length(unique(x)))
     })
-  
+
   if (missing(Names)) {
     if (!is.null(colnames(Data))) {
       Names = colnames(Data)
+      if(length(Names)!=length(unique(Names))){
+        warning('Colnames are not unique. Numerating duplicated colnames.')
+        # Names = 1:dvariables
+        Names=colnames(Data)
+        charbooleandupli=duplicated(Names)
+        Names[charbooleandupli]=paste0(Names[charbooleandupli],2:(1+sum(charbooleandupli)))
+        colnames(Data) <- Names
+      }
     } else{
       Names = 1:dvariables
     }
@@ -111,6 +162,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     faktor <- sum(abs(qnorm(t(c(lowInnerPercentile, hiInnerPercentile)/100), 0, 1)))
     std <- sd(x, na.rm = TRUE)
     p <- c(lowInnerPercentile, hiInnerPercentile)/100
+    
     extrema=c(0.001,0.999)
     if (is.matrix(x) && dvariables > 1) {
       cols <- dvariables
@@ -124,7 +176,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
       }
     }else{
       quartile <- quantile(x, p, type = 5, na.rm = TRUE)
-      MinMax <- quantile(x, extrema, type = 5, na.rm = TRUE)
+      MinMax <- as.matrix(quantile(x, extrema, type = 5, na.rm = TRUE))
     }
     if (dvariables > 1){
       iqr <- quartile[2, ] - quartile[1, ]
@@ -136,13 +188,13 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     skewed=c()
     bimodalprob=c()
     isuniformdist=c()
-    Nsample=10000
-    kernels=matrix(NaN,nrow=Nsample,ncol = dvariables)
+    Nsample=max(c(10000,Ncases))
+    #kernels=matrix(NaN,nrow=Nsample,ncol = dvariables)
     normaldist=matrix(NaN,nrow=Nsample,ncol = dvariables)
     for (i in 1:dvariables) {
       shat[i] <- min(std[i], iqr[i]/faktor, na.rm = TRUE)
       mhat[i] <- mean(x[, i], trim = 0.1, na.rm = TRUE)
-      if(Ncases>45000){#statistical testing does not work with to many cases
+      if(Ncases>45000&Npervar[i]>8){#statistical testing does not work with to many cases
         vec=sample(x = x[, i],45000)
        # if(Ordering=="Statistics"){
           nonunimodal[i]=diptest::dip.test(vec)$p.value
@@ -162,7 +214,6 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
         isuniformdist[i]=0
       }else{
 #        if(Ordering=="Statistics"){
-     
           if(NUniquepervar[i]>MinimalAmoutOfUniqueData){
             nonunimodal[i]=diptest::dip.test(x[, i])$p.value
             skewed[i]=moments::agostino.test(x[, i])$p.value
@@ -184,14 +235,20 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
      # if(Ordering=="Statistics"){#everything is siginficant and enough data for gaussian estimation
         if(isuniformdist[i]<0.05 & nonunimodal[i]>0.05&skewed[i]>0.05&bimodalprob[i]<0.05& Npervar[i]>MinimalAmoutOfData & NUniquepervar[i]>MinimalAmoutOfUniqueData){
           normaldist[,i] <- rnorm(Nsample, mhat[i], shat[i])
-      }
+          #trim to range, not exact but close enough
+          normaldist[normaldist[,i]<min(x[, i],na.rm=T),i]=NaN#MinMax[1,i]
+          normaldist[normaldist[,i]>max(x[, i],na.rm=T),i]=NaN#MinMax[2,i]
+        }
           #else{#bimodal is siginficant and enough data for gaussian estimation
       #  if(bimodalprob[i]<0.05& Npervar[i]>MinimalAmoutOfData & NUniquepervar[i]>MinimalAmoutOfUniqueData)
      #     normaldist[,i] <- rnorm(Nsample, mhat[i], shat[i])
      # }
       
     }
-    
+
+    # statsps=data.frame(isuniformdist=isuniformdist,nonunimodal=nonunimodal,bimodalprob=bimodalprob,skewed=skewed)
+    # rownames(statsps)=Names
+    # return(data.frame(t(statsps)))
     #raw estimation, page 115, projection based clustering book
     nonunimodal[nonunimodal==0]=0.0000000001
     skewed[skewed==0]=0.0000000001
@@ -206,7 +263,6 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   #Using First Column is first variable principle
   Rangfolge=unique(dfrang$Variables,fromLast = FALSE,nmax = dvariables)#colnames(Data)#
   rm(dfrang)
-
   switch(Ordering,
          Default={
            x=as.matrix(Data)
@@ -215,10 +271,10 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
            
            bimodalprob=c()
            for (i in 1:dvariables) {
-             if(Ncases>45000){
+             if(Ncases>45000 & Npervar[i]>8){
                vec=sample(x = x[, i],45000)
                bimodalprob[i]=bimodal(vec)$Bimodal
-             }else if(sum(is.finite(x[, i]))<8){
+             }else if(Npervar[i]<8){
                bimodalprob[i]=0
              }else{
                bimodalprob[i]=bimodal(x[, i])$Bimodal
@@ -237,7 +293,6 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   )
 
   ## Data Reshaping----
-
   if(any(Npervar<MinimalAmoutOfData)|any(NUniquepervar<MinimalAmoutOfUniqueData)){#builds scatter plots in case of not enough information for pdf
     warning(paste('Some columns have less than,',MinimalAmoutOfData,',finite data points or less than ',MinimalAmoutOfUniqueData,' unique values. Changing from MD-plot to Jitter-Plot for these columns.'))
     DataDensity=Data
@@ -289,8 +344,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   
   # trim = TRUE: tails of the violins are trimmed
   # Currently catched in PDEdensity anyways but one should be prepared for future ggplot2 changes :-)
-  plot=plot + 
-    geom_violin(stat = "PDEdensity",fill=Fill,scale=MDscaling,size=Size,trim = TRUE)+ theme(axis.text.x = element_text(size=rel(1.2)))#+coord_flip()
+  plot=plot + geom_violin(stat = "PDEdensity",fill=Fill,scale=MDscaling,size=Size,trim = TRUE) + theme(axis.text.x = element_text(size=rel(1.2)))#+coord_flip()
   if(any(Npervar<MinimalAmoutOfData) | any(NUniquepervar<MinimalAmoutOfUniqueData)){
     DataJitter[,Rangfolge]
     dataframejitter=reshape2::melt(DataJitter)
@@ -301,7 +355,8 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     }else{
     colnames(dataframejitter) <- c('ID', 'Variables', 'Values')
     }
-    plot=plot+geom_jitter(size=2,data =dataframejitter,aes_string(x = "Variables", group = "Variables", y = "Values"),position=position_jitter(0.15))
+    plot=plot+geom_jitter(size=2,data =dataframejitter,aes_string(x = "Variables", group = "Variables", y = "Values"),
+                          position=position_jitter(0.15))
     
   }
 
@@ -319,11 +374,14 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     }
     DFtemp$Variables=as.character(DFtemp$Variables)
     #trimming in this case not required
-    plot=plot+geom_violin(data = DFtemp,mapping = aes_string(x = "Variables", group = "Variables", y = "Values"),colour=GaussianColor,alpha=0,scale=MDscaling,size=Gaussian_lwd,na.rm = T,trim = FALSE)+guides(fill=FALSE)
+ 
+    plot=plot+geom_violin(data = DFtemp,mapping = aes_string(x = "Variables", group = "Variables", y = "Values"),
+                          colour=GaussianColor,alpha=0,scale=MDscaling,size=Gaussian_lwd,
+                          na.rm = TRUE,trim = TRUE, fill = NA,position="identity",width=1)#+guides(fill=FALSE,scale=MDscaling)
   }
 
   if(isTRUE(BoxPlot)){
-    plot=plot+stat_boxplot(geom = "errorbar", width = 0.5, color=BoxColor)+geom_boxplot(width=1,outlier.colour = NA,alpha=0,fill='#ffffff', color=BoxColor)
+    plot=plot+stat_boxplot(geom = "errorbar", width = 0.5, color=BoxColor)+geom_boxplot(width=1,outlier.colour = NA,alpha=0,fill='#ffffff', color=BoxColor,position="identity")
   }
 
   # plot=plot + 
@@ -331,6 +389,8 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   
   if(isTRUE(requireNamespace("ggExtra"))){
     plot=plot+ggExtra::rotateTextX()
+  }else{
+    warning('Package ggExtra is not installed. Labels of Variablenames are not rotated.')
   }
   if(OnlyPlotOutput){
       return(ggplotObj = plot)

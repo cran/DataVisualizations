@@ -1,4 +1,4 @@
-ClassPDEplot <- function(Data,Cls,ColorSequence= DataVisualizations::DefaultColorSequence,ColorSymbSequence,PlotLegend =1,SameKernelsAndRadius=0,xlim,ylim,...){
+ClassPDEplot <- function(Data,Cls,ColorSequence,ColorSymbSequence,PlotLegend =1,SameKernelsAndRadius=0,xlim,ylim,...){
   # PlotHandle = ClassPDEplot(Data,Cls,ColorSequence,ColorSymbSequence,PlotLegend);
   # PDEplot the data for allclasses, weight the Plot with priors
   # INPUT
@@ -20,12 +20,19 @@ ClassPDEplot <- function(Data,Cls,ColorSequence= DataVisualizations::DefaultColo
   # 1.editor: 04/2015 MT, in max/min na.rm=T added, Fehlerabfang, bei CLS, xlim added
   
   #MT
-  n=length(Cls)
-  if(n!=length(Data))
-    stop('Number of rows differs with length of cls')
+  if(!is.vector(Data)){
+    warning('Data is expected to me a vector. Calling as.vector().')
+    Data=as.vector(Data)
+  }
+  Cls=checkCls(Cls,length(Data))
+  # n=length(Cls)
+  # if(n!=length(Data))
+  #   stop('Number of rows differs with length of cls')
   if(missing(xlim))
     xlim <- c(min(Data,na.rm=T),max(Data,na.rm=T))
-  
+  if(missing(ColorSequence)){
+    ColorSequence= DataVisualizations::DefaultColorSequence[-2] #no yellow
+  }
   Ylimes <- 0
   
   if(missing(ColorSymbSequence))
@@ -35,12 +42,12 @@ ClassPDEplot <- function(Data,Cls,ColorSequence= DataVisualizations::DefaultColo
   UniqueClasses = unique(Cls)#ClCou$UniqueClasses
   CountPerClass = #ClCou$CountPerClass
   NrOfClasses = length(UniqueClasses)#ClCou$NumberOfClasses
-  
+  ClassPercentages <- rep(0, NrOfClasses)
   CountPerClass <- rep(0, NrOfClasses)
   for (i in 1:NrOfClasses) {
     inClassI <- sum(Cls == UniqueClasses[i])
     CountPerClass[i] = inClassI
-    ClassPercentages=inClassI/length(Cls) * 100
+    ClassPercentages[i]=inClassI/length(Cls) * 100
   }
   
   #ClassPercentages = ClCou$ClassPercentages # KlassenZaehlen 
@@ -76,11 +83,11 @@ ClassPDEplot <- function(Data,Cls,ColorSequence= DataVisualizations::DefaultColo
     }
     #figure()
     for(c in 1:NrOfClasses){
-      plot(Kernels,ClassParetoDensities[,c]*rep(Weight[c],nrow(ClassParetoDensities)),Ylimes=c(0,Ylimes),xlim=xlim,typ='l',col=ColorSequence[c],main="ParetoDensityEstimation(PDE)", xlab='Data', ylab='PDE',xaxs='i',yaxs='i')
+      plot(Kernels,ClassParetoDensities[,c]*rep(Weight[c],nrow(ClassParetoDensities)),ylim=c(0,Ylimes),xlim=xlim,typ='l',col=ColorSequence[c],main="ParetoDensityEstimation(PDE)", xlab='Data', ylab='PDE',xaxs='i',yaxs='i')
       par(new=TRUE); 
     }
-    
-    return(list(Kernels=Kernels, ClassParetoDensities=ClassParetoDensities))
+    par(new=FALSE); 
+    return(invisible(list(Kernels=Kernels, ClassParetoDensities=ClassParetoDensities)))
   }
   
   else{
@@ -110,7 +117,8 @@ ClassPDEplot <- function(Data,Cls,ColorSequence= DataVisualizations::DefaultColo
       
       par(new=TRUE); 
     }
-    return(kernels=kernels)
+    par(new=FALSE); 
+    return(invisible(list(Kernels=kernels, ClassParetoDensities=paretoDensity)))
   }
   
   if(PlotLegend ==1){
