@@ -38,6 +38,15 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
 
   Ncases=nrow(Data)
   
+  Nfinitepervar=apply(Data,MARGIN = 2,function(x) {
+    return(sum(is.finite(x)))
+  })
+  if(any(Nfinitepervar<1)){
+    warning('Some columns have not even one finite value. Please check your data. Deleting these columns.')
+    Data=Data[,Nfinitepervar>0]
+    dvariables=ncol(Data)
+  }
+  
   if(Ncases>SampleSize){
     warning('Data has more cases than "SampleSize". Drawing a sample for faster computation.
             You can omit this by setting "SampleSize=nrow(Data".')
@@ -69,14 +78,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     }
     Ncases=nrow(Data)
   }
-  Nfinitepervar=apply(Data,MARGIN = 2,function(x) {
-    return(sum(is.finite(x)))
-  })
-  if(any(Nfinitepervar<1)){
-    warning('Some columns have not even one finite value. Please check your data. Deleting these columns.')
-    Data=Data[,Nfinitepervar>0]
-    dvariables=ncol(Data)
-  }
+
   
   Npervar=apply(Data,MARGIN = 2,function(x) sum(is.finite(x)))
   NUniquepervar=apply(Data,MARGIN = 2,function(x) {
@@ -84,6 +86,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     return(length(unique(x)))
     })
 
+  
   if (missing(Names)) {
     if (!is.null(colnames(Data))) {
       Names = colnames(Data)
@@ -197,15 +200,19 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
       if(Ncases>45000&Npervar[i]>8){#statistical testing does not work with to many cases
         vec=sample(x = x[, i],45000)
        # if(Ordering=="Statistics"){
+        if(NUniquepervar[i]>MinimalAmoutOfUniqueData){
           nonunimodal[i]=diptest::dip.test(vec)$p.value
           skewed[i]=moments::agostino.test(vec)$p.value
           #Ties should not be present, however here we only approximate
           isuniformdist[i]=suppressWarnings(ks.test(vec,"punif", MinMax[1, i], MinMax[2, i])$p.value)
-       # }else{
-        #  nonunimodal[i]=1
-        #  skewed[i]=1
-       # }
-        bimodalprob[i]=bimodal(vec)$Bimodal
+          bimodalprob[i]=bimodal(vec)$Bimodal
+         }else{
+           warning('Not enough unique values for statistical testing, thus output of testing is ignored.')
+           nonunimodal[i]=1
+           skewed[i]=1
+           isuniformdist[i]=0
+           bimodalprob[i]=0
+        }
       }else if(Npervar[i]<8){#statistical testing does not work with not enough cases
         warning(paste('Sample of finite values to small to calculate agostino.test or dip.test. for row',i,colnames(x)[i]))
         nonunimodal[i]=1
@@ -280,9 +287,13 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
                bimodalprob[i]=bimodal(x[, i])$Bimodal
              }
            }
-           #print(bimodalprob)
-           Rangfolge=Rangfolge[order(bimodalprob,decreasing = T,na.last = T)]
            
+           if(length(unique(bimodalprob))<2 & ncol(x)>1 & isTRUE(RobustGaussian)){
+              Rangfolge=Rangfolge[order(Effectstrength,decreasing = T,na.last = T)]
+              message('Using statistics for ordering instead of default')
+           }else{
+              Rangfolge=Rangfolge[order(bimodalprob,decreasing = T,na.last = T)]
+           }
          },
          Columnwise={Rangfolge=Rangfolge},
          Alphabetical={Rangfolge=sort(Rangfolge,decreasing = F,na.last = T)},
@@ -302,22 +313,24 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
       if(Npervar[nc]<MinimalAmoutOfData){
         #generated values around the median if not enoug non finite values given
         # this is done to draw a median line
-        if(mm[nc]!=0)
+        if(mm[nc]!=0){
           DataDensity[,nc]=mm[nc]*runif(Ncases, -0.001, 0.001)+mm[nc]
-        else
+        }else{
           DataDensity[,nc]=runif(Ncases, -0.001, 0.001)
+        }
       }
       if(NUniquepervar[nc]<MinimalAmoutOfUniqueData){
         #generated values around the median if not enoug unique values given
         # this is done to draw a median line
-        if(mm[nc]!=0)
+        if(mm[nc]!=0){
           DataDensity[,nc]=mm[nc]*runif(Ncases, -0.001, 0.001)+mm[nc]
-        else
+        }else{
           DataDensity[,nc]=runif(Ncases, -0.001, 0.001)
+        }
       }
     }
     #Generates in the cases where pdf cannot be estimated a scatter plot
-    DataJitter=Data
+    DataJitter=DataDensity
     #Delete all scatters for features where distributions can be estimated
     DataJitter[,(Npervar>=MinimalAmoutOfData&NUniquepervar>=MinimalAmoutOfUniqueData)]=NaN
     #apply ordering

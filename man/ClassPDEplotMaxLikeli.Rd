@@ -13,7 +13,7 @@ ClassPDEplotMaxLikeli(Data, Cls, ColorSequence = DataVisualizations::DefaultColo
 
  main = "Pareto Density Estimation (PDE)",
 
- xlab = "Data", ylab = "ParetoDensity", xlim, ylim, \dots)
+ xlab = "Data", ylab = "ParetoDensity", xlim, ylim, lwd=1, \dots)
 }
 \arguments{
   \item{Data}{
@@ -49,8 +49,11 @@ ClassPDEplotMaxLikeli(Data, Cls, ColorSequence = DataVisualizations::DefaultColo
   \item{xlim}{
   Optional: area of the x-axis to be plotted
   }
-  \item{ylim}{
+  \item{lwd}{
   Optional: area of the y-axis to be plotted
+  }
+   \item{ylim}{
+	numerical scalar defining the width of the lines
   }
   \item{\dots}{
   further arguments passed to plot  
@@ -68,10 +71,15 @@ Felix Pape
 }
 \examples{
 \dontshow{
+# sampling is online done
+# because otherwise the example takes too long
+# in the CRAN check
 data(ITS)
+ind=sample(length(ITS),1000)
+
 #clustering only for testing
 Classification=c(rep(1,8805),rep(2,2389))
-DataVisualizations::ClassPDEplotMaxLikeli(ITS,Classification)
+DataVisualizations::ClassPDEplotMaxLikeli(ITS[ind],Classification[ind])
 }
 
 \donttest{
