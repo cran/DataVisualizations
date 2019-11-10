@@ -1,8 +1,8 @@
 ClassMDplot  <- function(Data, Cls, ColorSequence = DataVisualizations::DefaultColorSequence,
                          ClassNames = NULL, PlotLegend = TRUE,
-                         main = 'PDE Violin Plot for each Class',
+                         main = 'MDplot for each Class',
                          xlab = 'Classes', ylab = 'PDE of Data per Class',
-                         MinimalAmoutOfData=40) {
+                         MinimalAmoutOfData=40,MinimalAmoutOfUniqueData=12,SampleSize=1e+05) {
   # PlotHandle = ClassViolinplot(Data,Cls,ColorSequence,ColorSymbSequence,PlotLegend);
   # BoxPlot the data for all classes, weight the Plot with 1 (= maximum likelihood)
   # INPUT
@@ -32,7 +32,33 @@ ClassMDplot  <- function(Data, Cls, ColorSequence = DataVisualizations::DefaultC
   Cls <- Cls[NoNanInd]
   
   AnzData = length(Data)
-  Cls=checkCls(Cls,AnzData)
+  uniqueData=unique(Data)
+
+  #split quoted
+  TrainInd <- c()
+  if(AnzData>SampleSize){
+    UniqueClasses=unique(Cls)
+    Percentage=round(SampleSize/AnzData,2)
+    for(i in UniqueClasses){
+      ClassInd <- which(Cls==i)
+      nclass=round(length(ClassInd)* Percentage,0)
+      if(nclass>SampleSize) #adjusted splited quoted (only for classes bigger than sample size)
+        sampleInd <- sample(ClassInd,nclass)
+      else
+        sampleInd = ClassInd
+      
+      TrainInd=c(TrainInd,sampleInd)
+    }
+      Data=Data[TrainInd] #Data[TrainInd,,drop=FALSE]
+      Cls=Cls[TrainInd]
+    AnzData=length(Data)
+  }
+  
+  if(AnzData<3e+03){
+    Cls=checkCls(Cls,AnzData,Normalize=TRUE)
+  }else{
+    Cls=checkCls(Cls,AnzData,Normalize=FALSE)
+  }
   #ClCou <- ClassCount(Cls)
   UniqueClasses = sort(unique(Cls))#ClCou$UniqueClasses
   #CountPerClass = ClCou$countPerClass
@@ -78,7 +104,13 @@ ClassMDplot  <- function(Data, Cls, ColorSequence = DataVisualizations::DefaultC
   ClassData=cbind(ClassData,ClassColors=Colors,ClassNames=ClassNamesVec)#,ClassColorsHex=ClassColorsHex)
   sorted=order(ClassData$class,decreasing = FALSE,na.last = T)
   ClassData=ClassData[sorted,]
-
+  for(i in 1:NrOfClasses){
+    x=ClassData$data[Cls==UniqueClasses[i]]
+    if(length(unique(x))<MinimalAmoutOfUniqueData){
+      x=JitterUniqueValues(x,NULL)
+      ClassData$data[Cls==UniqueClasses[i]]=x
+    }
+  }
 
   ClassData$class=factor(ClassData$class)
   ClassData$ClassColors=factor(ClassData$ClassColors)
@@ -92,10 +124,10 @@ ClassMDplot  <- function(Data, Cls, ColorSequence = DataVisualizations::DefaultC
     NUniquepervar[i]=length(unique(Data[Cls==UniqueClasses[i]]))
   }
 
-  if(any(Npervar<MinimalAmoutOfData) | any(NUniquepervar<MinimalAmoutOfData)){
+  if(any(Npervar<MinimalAmoutOfData)){
     ClassData2=ClassData
     for(i in 1:length(UniqueClasses)){
-      if(Npervar[i]<MinimalAmoutOfData | NUniquepervar[i]<MinimalAmoutOfData){
+      if(Npervar[i]<MinimalAmoutOfData){
         ClassData2[ClassData2$class==UniqueClasses[i],'data']=NaN
       }
     }

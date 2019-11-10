@@ -7,17 +7,21 @@ Mirrored Density plot (MD-plot)
 This function creates a MD-plot for each variable of the data matrix. 
 The MD-plot is a visualization for a boxplot-like Shape of the PDF published in [Thrun et al., 2019].
 It is an improvement of violin or so-called bean plots and posses advantages in comparison to the conventional well-known box plot [Thrun et al., 2019].
+
+A complete guide about the MDplot can be found in \url{https://md-plot.readthedocs.io/en/latest/index.html}.
 }
 \usage{
 MDplot(Data, Names, Ordering='Default', Scaling="None",
 
 Fill='darkblue', RobustGaussian=TRUE, GaussianColor='magenta',
 
-Gaussian_lwd=1.5, BoxPlot=FALSE, BoxColor='darkred',
+Gaussian_lwd=1.5, BoxPlot=FALSE,BoxColor='darkred', 
 
-MDscaling='width',Size=0.01, MinimalAmoutOfData=40,
+MDscaling='width', LineColor='black', LineSize=0.01,
 
-MinimalAmoutOfUniqueData=12,SampleSize=5e+05,OnlyPlotOutput=TRUE)
+MinimalAmoutOfData=40, MinimalAmoutOfUniqueData=12,
+
+SampleSize=5e+05,SizeOfJitteredPoints=1,OnlyPlotOutput=TRUE)
 }
 
 \arguments{
@@ -52,25 +56,30 @@ MinimalAmoutOfUniqueData=12,SampleSize=5e+05,OnlyPlotOutput=TRUE)
       \item{BoxColor}{
     Optional: string, color of Boxplot, only for \code{BoxPlot=TRUE}.
   }
-  
     \item{MDscaling}{
     Optional: if "area", all violins have the same area (before trimming the tails). If "count", areas are scaled proportionally to  the number of observations. If "width" (default), all MDs have the same maximum width.
   }
-    \item{Size}{
-    Optional: numerical, linewidth of black line around the MDs.
+     \item{LineColor}{
+    Optional: string, color of line around the mirrored densities. \code{NA} disables this features which is usefull if ones wants to avoid vertical lines leading to outliers.
+  }
+    \item{LineSize}{
+    Optional: numerical, linewidth of line around the mirrored densities.
   }
     \item{MinimalAmoutOfData}{
-    Optional: numeric value defining a threshold. Below this threshold no density estimation is performed and a          Jitter plot with a median line is drawn. Only Data Science experts should change this value after they understand     how the density is estimated (see [Ultsch, 2005]).
+    Optional: numeric value defining a threshold. Below this threshold no density estimation is performed and a jitter plot with a median line is drawn. Only Data Science experts should change this value after they understand     how the density is estimated (see [Ultsch, 2005]).
   }
       \item{MinimalAmoutOfUniqueData}{
-    Optional: numeric value defining a threshold. Below this threshold no density estimation and statistical testing is performed and a          Jitter plot with a median line is drawn. Only Data Science experts should change this value after they understand how the density is estimated (see [Ultsch, 2005]).
+    Optional: numeric value defining a threshold. Below this threshold no density estimation and statistical testing is performed and a Jitter plot is drawn. Only Data Science experts should change this value after they understand how the density is estimated (see [Ultsch, 2005]).
   }
       \item{SampleSize}{
     Optional: numeric value defining a threshold. Above this threshold uniform sampling of finite cases is performed in order to shorten computation time.If \pkg{rowr} is not installed, uniform sampling of all cases
     is performed. If required, \code{SampleSize=n} can be set to omit this procedure. 
   }
+   \item{SizeOfJitteredPoints}{
+	 Optional: scalar. If not enough unique values for density estimation are given, data points are jittered. This parameter defines the size of the points. 
+  }
   \item{OnlyPlotOutput}{
-  Default TRUE only a ggplot object is given back, if FALSE: Additinally Scaled Data and ordering are the output of this function in a \code{list}.
+   Optional: Default TRUE only a ggplot object is given back, if FALSE: Additinally, scaled data and ordering are the output of this function in a \code{list}.
   }
 }
 
@@ -89,7 +98,7 @@ Otherwise for \code{OnlyPlotOutput==FALSE}: A list of
    [1:n,1:d] matrix of ordered and scaled data defined by \code{Ordering} and \code{Scaling}.
   }
   
-  Note that the package \pkg{ggExtra} is not necessarily required but if given the feauture names are automatically rotated. 
+  Note that the package \pkg{ggExtra} is not necessarily required but if given the feature names are automatically rotated. 
 }
 
 \author{
@@ -165,7 +174,10 @@ For the paramter \code{Scaling} the following options are possible:
 
 }
 \seealso{
+\url{https://md-plot.readthedocs.io/en/latest/index.html}
+
 \code{\link{ClassMDplot}}
+
 \url{https://pypi.org/project/md-plot/}
 }
 \keyword{violin plot}

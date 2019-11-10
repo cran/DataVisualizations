@@ -1,7 +1,8 @@
 MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None",Fill='darkblue',
                                   RobustGaussian=TRUE,GaussianColor='magenta',Gaussian_lwd=1.5,
-                                  BoxPlot=FALSE,BoxColor='darkred',MDscaling='width',Size=0.01,
-                                  MinimalAmoutOfData=40, MinimalAmoutOfUniqueData=12,SampleSize=5e+05,OnlyPlotOutput=TRUE){
+                                  BoxPlot=FALSE,BoxColor='darkred',MDscaling='width',LineColor='black',LineSize=0.01,
+                                  MinimalAmoutOfData=40, MinimalAmoutOfUniqueData=12,SampleSize=5e+05,
+                                  SizeOfJitteredPoints=1,OnlyPlotOutput=TRUE){
   #MDplot(data, Names)
   # Plots a Boxplot like pdfshape for each column of the given data
   #
@@ -96,6 +97,20 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
         Names=colnames(Data)
         charbooleandupli=duplicated(Names)
         Names[charbooleandupli]=paste0(Names[charbooleandupli],2:(1+sum(charbooleandupli)))
+        colnames(Data) <- Names
+      }
+      if(any(Names=="")){
+        warning('Some colnames are set to "" (blank). Numerating these colnames.')
+        Names=colnames(Data)
+        charmissing=which(Names=="")
+        Names[charmissing]=paste0(Names[charmissing],2:(1+sum(charmissing)))
+        colnames(Data) <- Names
+      }
+      if(any(Names==" ")){
+        warning('Some colnames are set to "" (blank). Numerating these colnames.')
+        Names=colnames(Data)
+        charmissing=which(Names==" ")
+        Names[charmissing]=paste0(Names[charmissing],2:(1+sum(charmissing)))
         colnames(Data) <- Names
       }
     } else{
@@ -307,26 +322,30 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   if(any(Npervar<MinimalAmoutOfData)|any(NUniquepervar<MinimalAmoutOfUniqueData)){#builds scatter plots in case of not enough information for pdf
     warning(paste('Some columns have less than,',MinimalAmoutOfData,',finite data points or less than ',MinimalAmoutOfUniqueData,' unique values. Changing from MD-plot to Jitter-Plot for these columns.'))
     DataDensity=Data
-    mm=apply(Data,2,median,na.rm=T)
+    #mm=apply(Data,2,median,na.rm=T)
     #Transforms pdf estimation to median line drawing of pdf cannot be estimated
     for(nc in 1:dvariables){
       if(Npervar[nc]<MinimalAmoutOfData){
+        DataDensity[,nc]=JitterUniqueValues(Data[,nc],NULL)
+        
         #generated values around the median if not enoug non finite values given
         # this is done to draw a median line
-        if(mm[nc]!=0){
-          DataDensity[,nc]=mm[nc]*runif(Ncases, -0.001, 0.001)+mm[nc]
-        }else{
-          DataDensity[,nc]=runif(Ncases, -0.001, 0.001)
-        }
+        # if(mm[nc]!=0){
+        #   DataDensity[,nc]=mm[nc]*runif(Ncases, -0.001, 0.001)+mm[nc]
+        # }else{
+        #   DataDensity[,nc]=runif(Ncases, -0.001, 0.001)
+        # }
       }
       if(NUniquepervar[nc]<MinimalAmoutOfUniqueData){
+        DataDensity[,nc]=JitterUniqueValues(Data[,nc],NULL)
+        
         #generated values around the median if not enoug unique values given
         # this is done to draw a median line
-        if(mm[nc]!=0){
-          DataDensity[,nc]=mm[nc]*runif(Ncases, -0.001, 0.001)+mm[nc]
-        }else{
-          DataDensity[,nc]=runif(Ncases, -0.001, 0.001)
-        }
+        # if(mm[nc]!=0){
+        #   DataDensity[,nc]=mm[nc]*runif(Ncases, -0.001, 0.001)+mm[nc]
+        # }else{
+        #   DataDensity[,nc]=runif(Ncases, -0.001, 0.001)
+        # }
       }
     }
     #Generates in the cases where pdf cannot be estimated a scatter plot
@@ -357,7 +376,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   
   # trim = TRUE: tails of the violins are trimmed
   # Currently catched in PDEdensity anyways but one should be prepared for future ggplot2 changes :-)
-  plot=plot + geom_violin(stat = "PDEdensity",fill=Fill,scale=MDscaling,size=Size,trim = TRUE) + theme(axis.text.x = element_text(size=rel(1.2)))#+coord_flip()
+  plot=plot + geom_violin(stat = "PDEdensity",fill=Fill,scale=MDscaling,size=LineSize,trim = TRUE,colour=LineColor) + theme(axis.text.x = element_text(size=rel(1.2)))#+coord_flip()
   if(any(Npervar<MinimalAmoutOfData) | any(NUniquepervar<MinimalAmoutOfUniqueData)){
     DataJitter[,Rangfolge]
     dataframejitter=reshape2::melt(DataJitter)
@@ -368,7 +387,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     }else{
     colnames(dataframejitter) <- c('ID', 'Variables', 'Values')
     }
-    plot=plot+geom_jitter(size=2,data =dataframejitter,aes_string(x = "Variables", group = "Variables", y = "Values"),
+    plot=plot+geom_jitter(colour=Fill,size=SizeOfJitteredPoints,data =dataframejitter,aes_string(x = "Variables", group = "Variables", y = "Values"),
                           position=position_jitter(0.15))
     
   }
@@ -379,15 +398,16 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
     if(dvariables==1){#bugfix
       normaldist=as.matrix(normaldist)
       normaldist=cbind(normaldist,rep(NaN,Ncases))
-    }
+      colnames(normaldist)=c(colnames(Data),'Cnan')
+    } 
     DFtemp = reshape2::melt(normaldist)
     colnames(DFtemp) <- c('ID', 'Variables', 'Values')
     if(dvariables==1){#bugfix
-      DFtemp=DFtemp[DFtemp[,'Variables']==colnames(DFtemp)[1],]
+      DFtemp=DFtemp[DFtemp[,'Variables']==colnames(Data),]
     }
     DFtemp$Variables=as.character(DFtemp$Variables)
     #trimming in this case not required
- 
+
     plot=plot+geom_violin(data = DFtemp,mapping = aes_string(x = "Variables", group = "Variables", y = "Values"),
                           colour=GaussianColor,alpha=0,scale=MDscaling,size=Gaussian_lwd,
                           na.rm = TRUE,trim = TRUE, fill = NA,position="identity",width=1)#+guides(fill=FALSE,scale=MDscaling)
@@ -398,7 +418,7 @@ MDplot = PDEviolinPlot = function(Data, Names, Ordering='Default',Scaling="None"
   }
 
   # plot=plot + 
-  #   geom_violin(stat = "PDEdensity",fill=fill,scale=MDscaling,size=Size)+ theme(axis.text.x = element_text(size=rel(1.2)))
+  #   geom_violin(stat = "PDEdensity",fill=fill,scale=MDscaling,size=LineSize)+ theme(axis.text.x = element_text(size=rel(1.2)))
   
   if(isTRUE(requireNamespace("ggExtra"))){
     plot=plot+ggExtra::rotateTextX()

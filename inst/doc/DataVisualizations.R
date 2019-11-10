@@ -23,21 +23,23 @@ data(MTY)
 InspectVariable(MTY,'MTY')
 
 
-## ----fig.width=4, fig.height=4-------------------------------------------
+## ----fig.width=4, fig.height=4, message=FALSE----------------------------
 library(DataVisualizations)
+library(ggplot2)
 data(ITS)
 data(MTY)
 library(vioplot)
+Data=cbind(ITS,MTY)
+MDplot(Data)+ylim(0,6000)+ggtitle('Two Features With Adjusted Range')
 
-boxplot(ITS)
-vioplot(x=ITS)
+MDplot(Data,Scaling = "Robust")+ggtitle('"Shape-Invariant" Normalization')
 
-DF=data.frame(ID=1:length(ITS),ITS=ITS)
-ggplot2::ggplot(DF, mapping = ggplot2::aes_string(y = 'ITS',x='ID')) + ggplot2::geom_violin(stat = "PDEdensity",fill = "black",scale='width')+ggplot2::theme_bw()+ggplot2::ylab('Range of Values')+ggplot2::xlab('PDE')
-
-#Shortcut for several features
-MTY[MTY>8000]=8000 #Disregard outliers after deeper analysis, see publication
-MDplot(cbind(ITS,MTY))
+#Data is now capped
+Data[Data[,2]>6000,2]=6000
+MDplot(Data)+ylim(0,6000)+ggtitle('Two Features with MTY Capped')
+boxplot(Data,main='Two Features with MTY Capped')
+vioplot(Data[,1],Data[,2])
+title('Two Features with MTY Capped')
 
 ## ------------------------------------------------------------------------
 library(DataVisualizations)
