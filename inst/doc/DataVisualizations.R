@@ -1,4 +1,4 @@
-## ----setup, include=FALSE------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 # library(rgl)
 # #library(rglwidget)
 # setupKnitr()
@@ -12,18 +12,18 @@
 #                       fig.ext = "jpeg"
 #                       )
 
-## ----fig.width=5, fig.height=5-------------------------------------------
+## ----fig.width=5, fig.height=5------------------------------------------------
 library(DataVisualizations)
 data("Lsun3D")
 Pixelmatrix(Lsun3D$Data)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(DataVisualizations)
 data(MTY)
 InspectVariable(MTY,'MTY')
 
 
-## ----fig.width=4, fig.height=4, message=FALSE----------------------------
+## ----fig.width=4, fig.height=4, message=FALSE---------------------------------
 library(DataVisualizations)
 library(ggplot2)
 data(ITS)
@@ -41,14 +41,14 @@ boxplot(Data,main='Two Features with MTY Capped')
 vioplot(Data[,1],Data[,2])
 title('Two Features with MTY Capped')
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(DataVisualizations)
 data(ITS)
 data(MTY)
 Ind2=which(ITS<900&MTY<8000)
 PDEscatter(ITS[Ind2],MTY[Ind2],xlab = 'ITS in EUR',ylab ='MTY in EUR' ,main='Scatter density plot using PDE' )
 
-## ----fig.width=4, fig.height=4-------------------------------------------
+## ----fig.width=4, fig.height=4------------------------------------------------
 data("Lsun3D")
 n=nrow(Lsun3D$Data)
 Data=cbind(Lsun3D$Data,runif(n),rnorm(n),rt(n,2),rlnorm(n),rchisq(100,2))
@@ -57,12 +57,12 @@ cc=cor(Data,method='spearman')
 diag(cc)=0
 Pixelmatrix(cc,YNames = Header,XNames = Header,main = 'Spearman Coeffs')
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(DataVisualizations)
 data("Lsun3D")
 InspectDistances(Lsun3D$Data,method="euclidean")
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(DataVisualizations)
 Cls=c(1L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 
 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 
@@ -95,14 +95,14 @@ Codes=c("AFG", "AGO", "ALB", "ARG", "ATG", "AUS", "AUT", "BDI", "BEL",
 "VUT", "WSM", "ZAF", "ZAR", "ZMB", "ZWE")
 Worldmap(Codes,Cls)
 
-## ----fig.width=5, fig.height=5-------------------------------------------
+## ----fig.width=5, fig.height=5------------------------------------------------
 library(DataVisualizations)
 data(categoricalVariable)
 Fanplot(categoricalVariable)
 
 Piechart(categoricalVariable)
 
-## ----warning=FALSE, comment=FALSE----------------------------------------
+## ----warning=FALSE, comment=FALSE---------------------------------------------
 library(DataVisualizations)
 data("Lsun3D")
 
@@ -110,7 +110,7 @@ Heatmap(Lsun3D$Data,Lsun3D$Cls,method = 'euclidean')
 
 Silhouetteplot(Lsun3D$Data,Lsun3D$Cls,PlotIt = T)
 
-## ----fig.width=4, fig.height=4,warning=FALSE-----------------------------
+## ----fig.width=4, fig.height=4,warning=FALSE----------------------------------
 library(DataVisualizations)
 data("Lsun3D")
 Accuracy=c()
