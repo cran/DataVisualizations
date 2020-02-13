@@ -1,5 +1,5 @@
-49b6951e2c2cd6bf4146ed47d7171227 *DESCRIPTION
-628e0d6aae32b6a897a192b0ea711431 *NAMESPACE
+75efb8eaecc2f25bef4b244b137662f5 *DESCRIPTION
+c64e2549e4fa9fe1123ff3f7f5d52c04 *NAMESPACE
 1eb611ea0a946a49e95980e1c7de8655 *R/ABCbarplot.R
 443ec3babf2d52edbaf3638c2e5dfcd5 *R/Choroplethmap.R
 ae78a691b2011231f381a5d1a9739058 *R/ClassBoxPlot.R
@@ -7,6 +7,7 @@ ae78a691b2011231f381a5d1a9739058 *R/ClassBoxPlot.R
 8bf16f6dc8dcc243e9f4a46480278316 *R/ClassPDEplot.R
 4db8c05f2370d275d8e798aa2b3494ba *R/ClassPDEplotMaxLikeli.R
 23ac6b330665726b4e134ef72397e304 *R/Classplot.R
+4d55495c60f4084a5d722a74dfbcfec1 *R/CombineCols.R
 ef85c0f91271b6efbbb18a87a6358337 *R/Crosstable.R
 bbc2d304fff649f72fa2a28d58c6056f *R/DrawWorldWithCls.R
 90dde5c9d197855a2e1fab1efe17a2dd *R/DualaxisClassplot.R
@@ -22,8 +23,8 @@ e1533659dae66c65ef79cc6eb09eacf6 *R/InspectStandardization.R
 2e0d42c0e591324ef0c846d937dd280d *R/InspectVariable.R
 6b4e02693be1b1728a99d6a290388640 *R/JitterUniqueValues.R
 6280c70d060150372862030002e912d4 *R/MAplot.R
-2ef7ebcfb553402796d5561385f44178 *R/MDplot.R
-abcd7062062f170d26d49940a9fea8bd *R/MDplot4multiplevectors.R
+35f8c38557f59a81ff69bea66841bef0 *R/MDplot.R
+94736a7410a4352be912af5cd508bcd1 *R/MDplot4multiplevectors.R
 9167c0088794095d19eb9d7595ea151a *R/OptimalNoBins.R
 eef71d1690296dc75e9f0f8709d4ed80 *R/PDEplot.R
 a281057c47bd3fc2aa2bbf4ba88e8d7e *R/PDEscatter.R
@@ -31,7 +32,7 @@ cd82e199eb456a52fc5076f7bfe74e25 *R/ParetoDensityEstimation.R
 c209c568f7abf0be3b3c9a8cdd9c13f7 *R/ParetoRadius.R
 0bf0e179d7a23e3e1ff8ad7a72385548 *R/Piechart.R
 9373845e3000fc999cf774ff9d9544c8 *R/Pixelmatrix.R
-14837618374c2fcd7a5baf44618609b1 *R/Plot3D.R
+f58a1a4440b7fdaff71dd6fdd5327967 *R/Plot3D.R
 2e919ea696dbfccf029d4a15ae376c62 *R/PlotMissingvalues.R
 3ecd4a7b872068d0b176a4016695b4d5 *R/PlotProductratio.R
 67df7d5fcb380f298718830eaa78be67 *R/QQplot.R
@@ -50,7 +51,7 @@ deac0d4fd4292d11b1db2374acc6ad8d *R/SignedLog.R
 a0ef955099b31cff8849178c0fa2a260 *R/internpiechart.R
 18400467185a9cc759c650f8f53e924f *R/stat_pde_density.R
 db8a63c2df46011705c743063f96d2bd *R/zplot.R
-54c9cf57010d059d50b864f26cd000c0 *build/partial.rdb
+22ad5f2bd49877ca48701df25b2921c9 *build/partial.rdb
 513f317196dbcc5a175f9f83de2632df *build/vignette.rds
 4fc72011dd7c2c15d411d4c0e9ebffde *data/AccountingInformation_PrimeStandard_Q3_2019.rda
 406c38fbdb1e60d24b035f9cc8db873e *data/ChoroplethPostalCodesAndAGS_Germany.rda
@@ -64,10 +65,10 @@ aeeb345995c2176b88e2865d0f182370 *data/MTY.rda
 36166e957add340e2b85dcf40e1c1bd3 *data/categoricalVariable.rda
 53a1951e55923d67e1b789c2b183fcd6 *data/world_country_polygons.rda
 416f32c5365f93c25eb6d6c73e4fed64 *inst/CITATION
-5e52af31d45e72795844de5d31fe2098 *inst/NEWS
+86389f830e26671af6136045425d8a36 *inst/NEWS
 43d42db0bcf8b6f0360fdec373815d38 *inst/doc/DataVisualizations.R
 2e4cc797678e6675ef3fcab866bfbf9e *inst/doc/DataVisualizations.Rmd
-a06fb04bae75c79c60aa29c1c9c91645 *inst/doc/DataVisualizations.html
+87273a56d8c7b3f720456b031fed7a61 *inst/doc/DataVisualizations.html
 7e366f2cc5698e27bcbbe2140108c881 *inst/extdata/ClassifiedMap_Small.jpg
 cc1edcdc65e7a5490beb54087f173afe *man/ABCbarplot.Rd
 1aee8ac1f80274548ae80e5ba678d193 *man/AccountingInformation_PrimeStandard_Q3_2019.Rd
@@ -78,6 +79,7 @@ b5c9bc51fe16860d353fd9730c9bac64 *man/ClassBoxPlot.Rd
 3d289c8432ae776532991543c79e59c1 *man/ClassPDEplot.Rd
 9c242447b78050c3d12bac33182ddc9f *man/ClassPDEplotMaxLikeli.Rd
 15cde789a5bc72b1ad7c298da4b5f7bb *man/Classplot.Rd
+c4120a592191ad8a22e6f67b48e4488a *man/CombineCols.Rd
 0e64ad7409ba422fba628b85ea220b85 *man/Crosstable.Rd
 ac9b28199b8da4f3620604c4fea54ee4 *man/DataVisualizations-package.Rd
 38b5beab7724e4d05d00f795724b9e14 *man/DefaultColorSequence.Rd
@@ -107,7 +109,7 @@ dbb846a18283cf050b6964bbfb78d542 *man/PDEscatter.Rd
 95083ad907599ef00edfb772f9d85d8c *man/ParetoRadius.Rd
 744f6458b794c8c6948689c3715c51f7 *man/Piechart.Rd
 165325e05ab067567528c9d3e4ff754b *man/Pixelmatrix.Rd
-325b5b356c7751fcb6dc061f4d93decf *man/Plot3D.Rd
+d24051ceedea5a29f58e6c78e27e1843 *man/Plot3D.Rd
 828df08e5968d741f00f8488e5b384cb *man/PlotMissingvalues.Rd
 49ec74164738fa8fc5d703c03da9f7d5 *man/PlotProductratio.Rd
 07c46066e92d4253fe7853c5b7489efb *man/PmatrixColormap.Rd
