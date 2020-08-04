@@ -4,7 +4,7 @@
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Plot the Choropleth Map
+Plots the Choropleth Map
 }
 \description{
 A thematic map with areas colored in proportion to the measurement of the statistical variable being displayed on the map. A political map geneated by this function was used in the conference talk of the publication [Thrun/Ultsch, 2018].}
@@ -80,7 +80,7 @@ FALSE: enable  warnings of \code{choroplethr} package
 }
 }
 \details{
-The \code{choroplethr} package is not documented well. This wrapper enables  to visualize an map much more easy in the case of german zip codes. Other postal codes are in principle usable.
+This wrapper for the \pkg{choroplethr} enables to visualize a political map easily in the case of german zip codes based on given counts and postal codes. Other postal codes are in principle usable.
 }
 \value{
 List of
