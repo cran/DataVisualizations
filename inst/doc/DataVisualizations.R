@@ -113,14 +113,19 @@ Silhouetteplot(Lsun3D$Data,Lsun3D$Cls,PlotIt = T)
 ## ----fig.width=4, fig.height=4,warning=FALSE----------------------------------
 library(DataVisualizations)
 data("Lsun3D")
-Accuracy=c()
+Accuracy=matrix(NaN,100,2)
+Algorithms=c("MacQueen","Lloyd")
+colnames(Accuracy)=Algorithms
 for(i in 1:100){
-  Cls=kmeans(Lsun3D$Data,4,algorithm="MacQueen")$cluster
+  Cls=kmeans(Lsun3D$Data,4,algorithm=Algorithms[1])$cluster
+  Cls2=kmeans(Lsun3D$Data,4,algorithm=Algorithms[2])$cluster
   #this is an artifical example, because the problem of arbitrary class labels is not accounted for
   #please choose an appropiate internal index or an external index
-  Accuracy[i]=sum(Cls==Lsun3D$Cls)
+  Accuracy[i,1]=sum(Cls==Lsun3D$Cls)/length(Lsun3D$Cls)
+  Accuracy[i,2]=sum(Cls2==Lsun3D$Cls)/length(Lsun3D$Cls)
 }
 
-DF=data.frame(ID=1:length(Accuracy),Accuracy=Accuracy)
-ggplot2::ggplot(DF, mapping = ggplot2::aes_string(y = 'Accuracy',x='ID')) + ggplot2::geom_violin(stat = "PDEdensity",fill = "black")+ggplot2::theme_bw()+ggplot2::ylab('Range of Values of the Evaluation of an Algorithm')+ggplot2::xlab('Output of Evaluation of Algorithm')
+MDplot(Accuracy) + xlab('Output of Evaluation of two Algorithms') +
+  ylab('Range of Values of the Evaluation of an Algorithm') +
+  ggtitle("Simple Benchmarking")
 

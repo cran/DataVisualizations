@@ -94,7 +94,7 @@ List of
 Michael Thrun
 }
 \note{
-You could read \url{https://www.r-bloggers.com/case-study-mapping-german-zip-codes-in-r/}, if you want to change the map (\code{PostalCodesShapes} shape object).
+You could read \url{https://www.r-bloggers.com/2016/05/case-study-mapping-german-zip-codes-in-r/}, if you want to change the map (\code{PostalCodesShapes} shape object).
 }
 
 \seealso{
@@ -106,7 +106,7 @@ Examples are provided in
 \examples{
 
 #If you download the package from CRAN
-\donttest{
+\dontrun{
 # 1. Step: Downlaod the shape file from the website 
 # www.deepbionics.org/Projects/DataVisualizations.html
 # 2. Step: load it from the local path od the downloaded file with
@@ -119,7 +119,7 @@ load(file='GermanPostalCodesShapes.rda')
 #Many postal codes are required to see a structure
 #Exemplary two postal codes in the upper left corner of the map
 
-\donttest{
+\dontrun{
 out=Choroplethmap(c(4,8,5,4),
 
 c('49838', '26817', '49838', '26817'),
@@ -130,7 +130,7 @@ NumberOfBins=2,PlotIt=FALSE,
 out$chorR6obj$render()
 }
 #bins are only presented in the map if the have values within
-\donttest{
+\dontrun{
 out=Choroplethmap(c(4,8,5,4),c('49838', '26817',
 
  '49838', '26817'),NumberOfBins=5,
@@ -145,7 +145,7 @@ out$chorR6obj$render()
 # Slightly misuse the function for visualizing a political map 
 # resulting out of a clustering
 
-\donttest{
+\dontrun{
 data('ChoroplethPostalCodesAndAGS_Germany')
 res=Choroplethmap(as.numeric(ChoroplethPostalCodesAndAGS_Germany$Cls)+1,
 
