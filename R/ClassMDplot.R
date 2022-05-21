@@ -26,7 +26,7 @@ ClassMDplot  <- function(Data, Cls, ColorSequence = DataVisualizations::DefaultC
   #    library(reshape2)
   #    library(ggplot2)
   
-
+ 
   NoNanInd <- which(!is.nan(Data))
   Data <- Data[NoNanInd]
   Cls <- Cls[NoNanInd]

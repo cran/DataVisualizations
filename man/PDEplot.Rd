@@ -5,17 +5,17 @@
 This function plots the Pareto probability density estimation  (PDE),
 uses PDEstimationForGauss and ParetoRadius.}
 \usage{
-PDEplot(data, paretoRadius = 0, weight = 1, kernels = NULL,
+PDEplot(Data, paretoRadius = 0, weight = 1, kernels = NULL,
 
                  LogPlot = F, PlotIt = TRUE, title =
                  "ParetoDensityEstimation(PDE)", color = "blue",
 				 
-                 xpoints = FALSE, xlim, ylim, xlab = "Data", ylab =
+                 xpoints = FALSE, xlim, ylim, xlab, ylab =
                  "PDE", ggPlot = ggplot(), sampleSize = 2e+05, lwd = 2)
 				 }
 
 \arguments{
-  \item{data}{numeric vector, data to be plotted.}
+  \item{Data}{[1:n] numeric vector of data to be plotted.}
   \item{paretoRadius}{numeric, the Pareto Radius. If omitted, calculate by paretoRad.}
   \item{weight}{numeric,  Weight*ParetoDensity  is plotted. 1 by default.}
   \item{kernels}{numeric vector of kernels. Optional}

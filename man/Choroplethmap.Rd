@@ -48,7 +48,7 @@ number of digits for \code{round}
 Specially prepared shape file with postal codes and geographic boundaries.
 If you set this object, then you can use non german zip codes.
 You can see the required structure in map.df,  github trulia choroplethr blob master r chloropleth. 
-The German PostalCodesShapes can be downloaded from \url{http://www.deepbionics.org/Projects/DataVisualizations.html}.
+The German PostalCodesShapes can be downloaded from \url{https://github.com/Mthrun/DataVisualizations/blob/master/data/GermanPostalCodesShapes.rda}.
 }
   \item{PlotIt}{
 Either Plot the map directly or change the object manually before plotting it
@@ -88,7 +88,7 @@ List of
 \item{DataFrame}{Transformed PostalCodes and Counts in a way that they can be used in the package \code{choroplethr}.}
 }
 \references{
-[Thrun/Ultsch, 2018]  Thrun, M. C. & Ultsch A. : Effects of the payout system of income taxes to municipalities in Germany, 12th Professor Aleksander Zelias International Conference on Modelling and Forecasting of Socio-Economic Phenomena, Foundation of the Cracow University of Economics, Zakopane, Poland, accepted, 2018.
+[Thrun/Ultsch, 2018] Thrun, M. C., & Ultsch, A. : Effects of the payout system of income taxes to municipalities in Germany, in Papiez, M. & Smiech,, S. (eds.), Proc. 12th Professor Aleksander Zelias International Conference on Modelling and Forecasting of Socio-Economic Phenomena, pp. 533-542, Cracow: Foundation of the Cracow University of Economics, Cracow, Poland, 2018. 
 }
 \author{
 Michael Thrun
@@ -100,15 +100,13 @@ You could read \url{https://www.r-bloggers.com/2016/05/case-study-mapping-german
 \seealso{
 Google \code{choroplethr} package.
 
-Examples are provided in
-\url{http://www.deepbionics.org/Projects/DataVisualizations.html}
 }
 \examples{
 
 #If you download the package from CRAN
 \dontrun{
 # 1. Step: Downlaod the shape file from the website 
-# www.deepbionics.org/Projects/DataVisualizations.html
+# https://github.com/Mthrun/DataVisualizations/blob/master/data/GermanPostalCodesShapes.rda
 # 2. Step: load it from the local path od the downloaded file with
 load(file='GermanPostalCodesShapes.rda')
 }
