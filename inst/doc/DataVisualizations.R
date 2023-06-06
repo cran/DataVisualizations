@@ -41,12 +41,13 @@ boxplot(Data,main='Two Features with MTY Capped')
 vioplot(Data[,1],Data[,2])
 title('Two Features with MTY Capped')
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE,warning=FALSE----------------------------------------------
 library(DataVisualizations)
 data(ITS)
 data(MTY)
 Ind2=which(ITS<900&MTY<8000)
-PDEscatter(ITS[Ind2],MTY[Ind2],xlab = 'ITS in EUR',ylab ='MTY in EUR' ,main='Scatter density plot using PDE' )
+if(requireNamespace("ScatterDensity"))
+V=DensityScatter(ITS[Ind2],MTY[Ind2],xlab = 'ITS in EUR',ylab ='MTY in EUR' ,main='Scatter density plot using PDE',Plotter="native",DensityEstimation = "PDE")
 
 ## ----fig.width=4, fig.height=4------------------------------------------------
 data("Lsun3D")

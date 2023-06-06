@@ -7,18 +7,17 @@ Classplot
 \description{
 Allows to plot one time series or feauture with a classification as a labeled scatter plot with a line.
 The colors are the labels defined by the classification.
-Usefull to see if temporal clustering has time dependent variations and for Hidden Markov Models (see Mthrun/RHmm on GitHub).
 }
 \usage{
-Classplot(X, Y, Cls,Names=NULL,
+Classplot(X, Y, Cls, Plotter,Names = NULL, na.rm = FALSE, 
 
-na.rm=FALSE, xlab , ylab ,
+xlab = "X", ylab = "Y", main = "Class Plot", Colors = NULL,
 
-main = "Class Plot", Colors,Size=8,
+Size = 8, LineColor = NULL, LineWidth = 1, LineType  = NULL, 
 
-LineColor = NULL, LineWidth = 1, LineType = NULL,
+Showgrid  = TRUE, pch = 20,  AnnotateIt = FALSE, SaveIt = FALSE, 
 
-Showgrid = TRUE, Plotter, pch,SaveIt = FALSE,\dots)
+Nudge_x_Names = 0, Nudge_y_Names = 0, Legend = "", \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,7 +31,7 @@ Showgrid = TRUE, Plotter, pch,SaveIt = FALSE,\dots)
 [1:n] numeric vector of k classes, if not set per default every point is in first class
 }
   \item{Names}{
-[1:n] character vector of k classes, if not set perdefault Cls is used, if set, names the legend and the points
+[1:n] character vector of k classes, if not set per default Cls is used, if set, names the legend and the points
 }
   \item{na.rm}{Function may not work with non finite values. If these cases should be automatically removed, set parameter TRUE}
   
@@ -48,8 +47,11 @@ Optional, string for title of plot
   \item{Colors}{
 Optional, string defining the k colors, one per class
 }
+  \item{AnnotateIt}{
+Optional, in case of \code{Plotter==ggplot} and given \code{Names} annotates each point if TRUE
+}
   \item{Size}{
-Optional, size of points
+Optional, size of points, beware: default is appropriate for  "\code{plotly}", or "\code{native}" but should smaller for "\code{ggplot}"
 }
   \item{LineColor}{
 Optional, name of color, in plotly then all points are connected by a curve, 
@@ -68,12 +70,22 @@ for ggplot2: just set =1 here and then the curve is plotted
 Optional, boolean (plotly only)
 }
   \item{Plotter}{
-Optional, either "\code{ggplot}", "\code{plotly}", or "\code{native}"
+Optional, either "\code{ggplot}" (default if \code{Names} given), "\code{plotly}" (default if no \code{Names} given), or "\code{native}"
 }
-\item{pch}{scalar, symbol to use, for native \code{Plotter} only}
+\item{pch}{ [1:n] numeric vector of k classes defines the symbols to use, for native \code{Plotter} or \code{ggplot}, usally k can be in a range from zero to 25}
   \item{SaveIt}{
 Optional, boolean, if true saves plot as html (plotly) or png (ggplot2)
 }
+  \item{Nudge_x_Names}{
+Optional, numerical scalar, for \code{Plotter} "\code{ggplot}" only, if \code{Names} are set, moves them consistently respective to x-axis within units of x-axis
+}
+  \item{Nudge_y_Names}{
+Optional, numerical scalar, for \code{Plotter} "\code{ggplot}" only, if \code{Names} are set, moves them consistently respective to y-axis within units of y-axis
+}
+  \item{Legend}{
+Optional, if argument is not missing, character string defining the title of the legend which automatically enables the legend
+}
+
 \item{\dots}{
 Further arguments for \code{ggplot2::ggplot},or  \code{plotly::plot_ly}, or \code{\link{plot}} (except "\code{pch}"" and "\code{type}") depending on \code{Plotter}
 }
@@ -81,6 +93,8 @@ Further arguments for \code{ggplot2::ggplot},or  \code{plotly::plot_ly}, or \cod
 
 \details{
 Default is "\code{plotly}" if \code{Names} are \code{NULL}. However,  ggplot2 is preferable in case that \code{Names} parameter is used because overlapping text labels are avoided. In that case  the default is "\code{ggplot}". Note that ggplot2 options are currently slightly restricted. 
+
+For example, the function is usefull to see if temporal clustering has time dependent variations and for Hidden Markov Models (see Mthrun/RHmm on GitHub).
 }
 \value{
 plotly object or ggplot2 objected depending on \code{Plotter}
@@ -97,6 +111,16 @@ Michael Thrun
 data(Lsun3D)
 Classplot(Lsun3D$Data[,1],Lsun3D$Data[,2],Lsun3D$Cls)
 
+#ggplot 2 with different symbols
+  Classplot(
+    Lsun3D$Data[, 1],
+    Lsun3D$Data[, 2],
+    Lsun3D$Cls,
+    Plotter = "ggplot2",
+    Size = 3,
+    pch = Lsun3D$Cls + 5
+  )
+
 #plotly with line
 data(Lsun3D)
 Classplot(Lsun3D$Data[,1],Lsun3D$Data[,2],Lsun3D$Cls,
@@ -106,6 +130,13 @@ LineType="-",LineColor = "green")
 data(Lsun3D)
 Classplot(Lsun3D$Data[,1],Lsun3D$Data[,2],Lsun3D$Cls,
 Names = rownames(Lsun3D$Data),Size =2,LineType = 1)
+}
+
+\donttest{
+#ggplot2 with labels and legend per class
+data(Lsun3D)
+Classplot(Lsun3D$Data[,1],Lsun3D$Data[,2],Lsun3D$Cls,
+Names = paste0("C",Lsun3D$Cls),Size =2,ggplot_legend ="Classes")
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
