@@ -47,7 +47,12 @@ data(ITS)
 data(MTY)
 Ind2=which(ITS<900&MTY<8000)
 if(requireNamespace("ScatterDensity"))
-V=DensityScatter(ITS[Ind2],MTY[Ind2],xlab = 'ITS in EUR',ylab ='MTY in EUR' ,main='Scatter density plot using PDE',Plotter="native",DensityEstimation = "PDE")
+V=DensityScatter(ITS[Ind2],MTY[Ind2],
+                 xlab = 'ITS in EUR',
+                 ylab ='MTY in EUR',
+                 main='Scatter density plot using PDE',
+                 Plotter="native",
+                 DensityEstimation = "PDE")
 
 ## ----fig.width=4, fig.height=4------------------------------------------------
 data("Lsun3D")
