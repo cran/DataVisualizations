@@ -48,7 +48,7 @@ number of digits for \code{round}
 Specially prepared shape file with postal codes and geographic boundaries.
 If you set this object, then you can use non german zip codes.
 You can see the required structure in map.df,  github trulia choroplethr blob master r chloropleth. 
-The German PostalCodesShapes can be downloaded from \url{https://github.com/Mthrun/DataVisualizations/blob/master/data/GermanPostalCodesShapes.rda}.
+The German PostalCodesShapes can be downloaded from \url{https://github.com/Mthrun/DataVisualizations/tree/master/data}.
 }
   \item{PlotIt}{
 Either Plot the map directly or change the object manually before plotting it
@@ -99,7 +99,6 @@ You could read \url{https://www.r-bloggers.com/2016/05/case-study-mapping-german
 
 \seealso{
 Google \code{choroplethr} package.
-
 }
 \examples{
 

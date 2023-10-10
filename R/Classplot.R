@@ -147,8 +147,20 @@ Classplot = function(X, Y, Cls,
             
       return('Subordinate package (plotly) is missing. No computations are performed.
              Please install the package which is defined in "Suggests".')
-  }
+    }
   p <- plotly::plot_ly()
+  
+  if(isFALSE(PointBorderCol)){
+    PointBorderCol="black"
+    borderWidth = 0
+    #warning("Classplot: 'PointBorderCol=FALSE' is not implemented for plotly")
+  } else {
+    # For small points, the border will represent the whole point with width 1
+    borderWidth = 1
+    if(Size <= 1) borderWidth = 0  # Size=1 is to small to see any coloring with border
+    else if(Size <= 2) borderWidth = 0.2
+    else if(Size <= 3) borderWidth = 0.7
+  }
   
   if(!is.null(LineColor)){
     p <- plotly::add_lines(p, x = ~X, y = ~Y,
@@ -169,9 +181,9 @@ Classplot = function(X, Y, Cls,
                               mode = "marker",
                               name = UniqueNames[i],
                               marker = list(size = Size,
-                                            color = unique(ColorVec[DataIdx]),
+                                            color = unique(ColorVec[DataIdx]), #unique(ColorVec[DataIdx])
                                             line = list(color = PointBorderCol,
-                                                        width = 1)))
+                                                        width = borderWidth)))
     }
   }else{
     p = plotly::add_markers(p = p,
@@ -233,7 +245,10 @@ Classplot = function(X, Y, Cls,
       ggplot2::theme_bw()
     
     if(missing(pch)){ #black shape around circular points
-      p=p+ggplot2::geom_point(size = Size)+ggplot2::geom_point(size = Size,pch=21, colour=PointBorderCol,alpha=0.4)
+      if(isFALSE(PointBorderCol)) #no borders around points
+        p=p+ggplot2::geom_point(size = Size)+ggplot2::geom_point(size = Size,pch=21, colour="black",alpha=0.4, stroke=NA)
+      else
+        p=p+ggplot2::geom_point(size = Size)+ggplot2::geom_point(size = Size,pch=21, colour=PointBorderCol,alpha=0.4)
     }else{#points have various shapes
       p=p+ggplot2::geom_point(size = Size,shape=pch)
     }

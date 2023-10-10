@@ -69,6 +69,7 @@ Choroplethmap=plotChoroplethMap=function(Counts,PostalCodes,NumberOfBins=0,Break
 # 
 # author:   Michael Thrun
 # 
+  
   if (!requireNamespace('choroplethr',quietly = TRUE)){
     
     message('Subordinate package (choroplethr) is missing. No computations are performed.

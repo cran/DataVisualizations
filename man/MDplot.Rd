@@ -41,7 +41,7 @@ BW=FALSE,ForceNames=FALSE)
   }
 
     \item{Fill}{
-    Optional: string, color with which MDs are to be filled with.
+    Optional: String or Vector, which gives the color(s) with which MDs are to be filled with.
   }
     \item{RobustGaussian}{
     Optional: If TRUE: each MDplot of a variable is overlayed with a roubustly estimated unimodal Gaussian distribution in the range of this variable,
@@ -133,10 +133,10 @@ MDplot(rpois(100,1000))
 }
 \donttest{
 x = cbind(
-    A = runif(20000, 1, 5),
-    B = c(rnorm(10000, 0, 1), rnorm(10000, 2.6, 1)),
-    C = c(rnorm(20000, 2.5, 1)),
-    D = rpois(20000, 5)
+    A = runif(2000, 1, 5),
+    B = c(rnorm(1000, 0, 1), rnorm(1000, 2.6, 1)),
+    C = c(rnorm(2000, 2.5, 1)),
+    D = rpois(2000, 5)
   )
 MDplot(x)
 }
@@ -247,11 +247,11 @@ For the paramter \code{Scaling} the following options are possible:
 
 \item{\code{Percentalize}}{Data is scaled between zero and 100.}
 
-\item{\code{CompleteRobust}}{Data is first robustly scaled between zero and 1, then centered to zero and outliers are capped by a robustly formula described in the \pkg{DatabionicSwarm} package. }
+\item{\code{CompleteRobust}}{Data is first robustly scaled between zero and 1, then centered to zero and outliers are capped by a robustly formula described in \code{\link{RobustNormalization}}. }
 
-\item{\code{Robust}}{Data is robustly scaled between zero and 1 by a formula described in the \pkg{DatabionicSwarm} package. }
+\item{\code{Robust}}{Data is robustly scaled between zero and 1 by a formula described in the \code{\link{RobustNormalization}}. }
 
-\item{\code{Log}}{Data is transformed with a sgined log allowing for negative values to be transformed with a logarithm of base 10, please see \code{SignedLog} for details.}
+\item{\code{Log}}{Data is transformed with a sgined log allowing for negative values to be transformed with a logarithm of base 10, please see \code{\link{SignedLog}} for details.}
 }
 }
 \references{
