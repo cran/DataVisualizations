@@ -19,7 +19,9 @@ LineColor = NULL, LineWidth = 1, LineType  = NULL,
 
 Showgrid  = TRUE, pch,  AnnotateIt = FALSE, SaveIt = FALSE, 
 
-Nudge_x_Names = 0, Nudge_y_Names = 0, Legend = "", \dots)
+Nudge_x_Names = 0, Nudge_y_Names = 0, Legend = "", SmallClassesOnTop = TRUE,
+
+\dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -88,6 +90,9 @@ Optional, numerical scalar, for \code{Plotter} "\code{ggplot}" only, if \code{Na
   \item{Nudge_y_Names}{
 Optional, numerical scalar, for \code{Plotter} "\code{ggplot}" only, if \code{Names} are set, moves them consistently respective to y-axis within units of y-axis
 }
+  \item{SmallClassesOnTop}{
+Optional, boolean, decide if small classes should be plotted on top for visibility (default setting) or not.
+}
   \item{Legend}{
 Optional, if argument is not missing, character string defining the title of the legend which automatically enables the legend
 }
@@ -98,6 +103,8 @@ Further arguments for \code{ggplot2::ggplot},or  \code{plotly::plot_ly}, or \cod
 }
 
 \details{
+The mapping of colors to the labels of \code{Cls} is consecutive, i.e., the label with the smallest value in \code{Cls} gets the first color in \code{Colors}. The Colors are plotted in order from label with the highest number of points to the label with the lowest number of points beeing on top.
+
 Default is "\code{plotly}" if \code{Names} are \code{NULL}. However,  ggplot2 is preferable in case that \code{Names} parameter is used because overlapping text labels are avoided. In that case  the default is "\code{ggplot}". Note that ggplot2 options are currently slightly restricted. 
 
 For example, the function is usefull to see if temporal clustering has time dependent variations and for Hidden Markov Models (see Mthrun/RHmm on GitHub).

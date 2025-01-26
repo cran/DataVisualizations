@@ -29,7 +29,7 @@ ParetoDensityEstimation = function(Data,paretoRadius,kernels=NULL,MinAnzKernels=
   if (!is.vector(Data)) {
     Data = as.vector(Data)
     if(isFALSE(Silent))
-    warning('Beware: ParetoDensityEstimation: Data set not univariate! Please provide a vector as Data.')
+      warning('Beware: ParetoDensityEstimation: Data set not univariate! Please provide a vector as Data.')
   }
   if (!is.numeric(Data)) {
     Data = as.numeric(Data)
@@ -236,11 +236,11 @@ ParetoDensityEstimation = function(Data,paretoRadius,kernels=NULL,MinAnzKernels=
   if(length(kernels)>1){
     paretoDensity_internal=paretoDensity
     
-      if((kernels[1]-paretoRadius)!=minData){#aber ueble warneldung vorgeben!
+      if((kernels[1]-paretoRadius)>minData){#aber ueble warneldung vorgeben!
         if(isFALSE(Silent))
         message("ParetoDensityEstimation(): range of kernels is higher than minimum of data. Density estimation is incomplete. Please either set kernels correctly or let the function set the kernels automatically!")
       }
-      if((tail(kernels,1)+paretoRadius)!=maxData){
+      if((tail(kernels,1)+paretoRadius)<maxData){
         if(isFALSE(Silent))
           message("ParetoDensityEstimation(): range of kernels is lower than maximum of data. Density estimation is incomplete Please either set kernels correctly or let the function set the kernels automatically!")
       }

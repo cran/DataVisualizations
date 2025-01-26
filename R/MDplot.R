@@ -464,11 +464,11 @@ MDplot = function(Data, Names, Ordering='Default',Scaling="None",Fill='darkblue'
   if(fillDifferentColors) {
     plot =
       ggplot(data = dataframe,
-             aes_string(x = "Variables", group = "Variables", y = "Values", fill = "Variables"))+scale_x_discrete(limits=Rangfolge) 
+             aes(x = .data$Variables, group = .data$Variables, y = .data$Values, fill = .data$Variables))+scale_x_discrete(limits=Rangfolge) 
   } else {
     plot =
       ggplot(data = dataframe,
-             aes_string(x = "Variables", group = "Variables", y = "Values"))+scale_x_discrete(limits=Rangfolge) 
+             aes(x = .data$Variables, group = .data$Variables, y = .data$Values))+scale_x_discrete(limits=Rangfolge) 
   }
   
   if(isTRUE(BW))
@@ -476,10 +476,15 @@ MDplot = function(Data, Names, Ordering='Default',Scaling="None",Fill='darkblue'
   # trim = TRUE: tails of the violins are trimmed
   # Currently catched in PDEdensity anyways but one should be prepared for future ggplot2 changes :-)
   if(fillDifferentColors) {
-    plot=plot + geom_violin(stat = "PDEdensity",scale=MDscaling,size=LineSize,trim = TRUE,colour=LineColor) + theme(axis.text.x = element_text(size=rel(1.2)), legend.position = "none")
+    plot=plot + geom_violin(stat = "PDEdensity", scale = MDscaling, size = LineSize,
+                            trim = TRUE, colour = LineColor) + 
+      theme(axis.text.x = element_text(size=rel(1.2)), legend.position = "none")
     plot=plot + scale_fill_manual(values=Fill)#+coord_flip()
   } else {
-    plot=plot + geom_violin(stat = "PDEdensity",scale=MDscaling,size=LineSize,trim = TRUE,fill=Fill,colour=LineColor) + theme(axis.text.x = element_text(size=rel(1.2)))
+    plot=plot + geom_violin(stat = "PDEdensity", scale = MDscaling, size = LineSize,
+                            bounds = c(0, 2),
+                            trim = TRUE, fill = Fill, colour = LineColor) +
+      theme(axis.text.x = element_text(size=rel(1.2)))
   }
   if(any(Npervar<QuantityThreshold) | any(NUniquepervar<UniqueValuesThreshold)){
     DataJitter[,Rangfolge]
@@ -492,10 +497,10 @@ MDplot = function(Data, Names, Ordering='Default',Scaling="None",Fill='darkblue'
       colnames(dataframejitter) <- c('ID', 'Variables', 'Values')
     }
     if(fillDifferentColors) {
-      plot=plot+geom_jitter(size=SizeOfJitteredPoints,data=dataframejitter,aes_string(x = "Variables", group = "Variables", y = "Values", colour = "Variables"),
+      plot=plot+geom_jitter(size=SizeOfJitteredPoints,data=dataframejitter,aes(x = .data$Variables, group = .data$Variables, y = .data$Values, colour = .data$Variables),
                             height = 0,width=0.15) + scale_color_manual(values = Fill)
     } else {
-      plot=plot+geom_jitter(colour=Fill,size=SizeOfJitteredPoints,data=dataframejitter,aes_string(x = "Variables", group = "Variables", y = "Values"),
+      plot=plot+geom_jitter(colour=Fill,size=SizeOfJitteredPoints,data=dataframejitter,aes(x = .data$Variables, group = .data$Variables, y = .data$Values),
                             height = 0,width=0.15)#no vertical jitter!
     }
     
@@ -526,7 +531,7 @@ MDplot = function(Data, Names, Ordering='Default',Scaling="None",Fill='darkblue'
       #trimming in this case not required
       
       
-      plot=plot+geom_violin(data = DFtemp,mapping = aes_string(x = "Variables", group = "Variables", y = "Values"),
+      plot=plot+geom_violin(data = DFtemp,mapping = aes(x = .data$Variables, group = .data$Variables, y = .data$Values),
                             colour=GaussianColor,alpha=0,scale=MDscaling,size=Gaussian_lwd,
                             na.rm = TRUE,trim = TRUE, fill = NA,position="identity",width=1)#+guides(fill=FALSE,scale=MDscaling)
     }#otherwise no robust gaussian exist
