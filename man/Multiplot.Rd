@@ -2,7 +2,7 @@
 \alias{Multiplot}
 \title{Plot multiple ggplots objects in one panel}
 \usage{Multiplot(..., Plotlist=NULL, ColNo=1, LayoutMat,Plotter =
-                    "native")}
+                    "native",main,main_fontsize=16)}
 \arguments{
 \item{...}{ multiple ggplot objects to be plotted}
 \item{Plotlist}{Optional: list filled with ggplot objects to be plotted}
@@ -10,6 +10,12 @@
 \item{LayoutMat}{A matrix specifying the layout. If present, 'ColNo' is ignored.}
   \item{Plotter}{
 Optional, either "\code{ggplot}", or "\code{native}"
+}
+  \item{main}{
+Optional, string specifying the title of the overall figure
+}
+  \item{main_fontsize}{
+Optional, scalar defining the font size of the title
 }
 }
 \value{List with
@@ -26,9 +32,9 @@ Cls=Lsun3D$Cls
 obj1=Classplot(Data[,1],Data[,2],Cls=Cls,Plotter="ggplot",Size=3,main="Top plot")
 obj2=Classplot(Data[,2],Data[,3],Cls=Cls,Plotter="ggplot",Size=3,main="Middle plot")
 obj3=Classplot(Data[,1],Data[,3],Cls=Cls,Plotter="ggplot",Size=3,main="Bottom plot")
-V=Multiplot(obj1,obj2,obj3)
+V=Multiplot(obj1,obj2,obj3,main="Three Classplots")
 }
 
 \author{
-Winston Chang
+Michael Thrun based on an idea by Winston Chang
 }

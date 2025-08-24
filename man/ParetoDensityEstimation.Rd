@@ -4,7 +4,8 @@
 \title{Pareto Density Estimation V3}
 \usage{
 ParetoDensityEstimation(Data, paretoRadius, kernels = NULL,
-  MinAnzKernels = 100,PlotIt=FALSE,Silent=FALSE)
+  MinAnzKernels = 100,
+  PlotIt=FALSE,Compute="Cpp",Silent=FALSE)
 }
 \arguments{
 \item{Data}{[1:n] numeric vector of data.}
@@ -13,9 +14,11 @@ ParetoDensityEstimation(Data, paretoRadius, kernels = NULL,
 
 \item{kernels}{Optional,[1:m] numeric vector data values where pareto density is measured at. If 0 (by default) kernels will be computed.}
 
-\item{MinAnzKernels}{Optional, minimal number of kernels, default MinAnzKernels==100}
+\item{MinAnzKernels}{Optional, minimal number of kernels in given data range, default MinAnzKernels==100, can be violated by \code{KernelRange}}
+    
   \item{PlotIt}{Optional, if TRUE: raw basic r plot of density estimation of debugging purposes. Usually please use \pkg{ggplot2} interface via \code{\link{PDEplot}} or \code{\link{MDplot}}}
-  
+  \item{Compute}{Either R, Cpp or Cpp_exp, Compute defines which subalgorithms are used to compute density estimation. Cpp_exp is not verified yet although Cpp_exp is faster than Cpp }
+
     \item{Silent}{Optional, if TRUE: disables all warnings}
 }
 \value{

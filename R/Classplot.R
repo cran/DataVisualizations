@@ -1,6 +1,7 @@
 Classplot = function(X, Y, Cls,
                      Plotter,
                      Names = NULL,
+                     Subsample=TRUE,
                      na.rm = FALSE,
                      xlab = "X",
                      ylab = "Y",
@@ -27,15 +28,23 @@ Classplot = function(X, Y, Cls,
  
   X=checkFeature(X,varname='X',Funname="Classplot")
   Y=checkFeature(Y,varname='Y',Funname="Classplot")
-  Cls=checkCls(Cls,length(Y))
   
-  
+  Cls=checkCls(Cls,length(Y),Normalize=FALSE)#true is highly computive intensive
+
   if(length(X)!=length(Y)) stop('X and Y have to have the same length')
   
   if(!missing(pch)){
     if(length(X)!=length(pch)){
       pch=rep(20,length(X))
       warning('X and pch have to have the same length. Setting "pch=20"')
+    }
+  }
+  if(!is.null(Names)){
+    if(length(X)!=length(Names)){
+      if(is.null(names(Names))){
+        Names=Names[1:length(X)]
+        warning('X and Names have to have the same length. Shortening Names to length of X"')
+      }
     }
   }
   
@@ -53,12 +62,33 @@ Classplot = function(X, Y, Cls,
       pch=pch[noNaNInd]
     }
   }
-  u=unique(Cls)
-  uu=sort(u,decreasing = F)
+  #erst missing werte bereinigen dann sample ziehen
+  if(isTRUE(Subsample)){
+    if(length(X)>5000){
+      indsub=ScatterDensity::SampleScatter(X,Y,PlotIt = F)
+    }else{
+      Subsample=FALSE
+    }
+  }
+  if(isTRUE(Subsample)){
+    X=X[indsub]
+    Y=Y[indsub]
+    Cls=Cls[indsub]
+    
+    if(!is.null(Names)){
+      Names=Names[indsub]
+    }
+    if(!missing(pch)){
+      pch=pch[indsub]
+    }
+  }
+  
+  uniqueLabels=unique(Cls)
+  uu=sort(uniqueLabels,decreasing = F)
   
   if(!is.null(Names)){
     #for legend
-    u_names=unique(Names)[order(u,decreasing = F)]
+    u_names=unique(Names)[order(uniqueLabels,decreasing = F)]
   }else{
     u_names=as.character(uu)
   }
@@ -85,7 +115,16 @@ Classplot = function(X, Y, Cls,
   uug=as.numeric(names(cp))
   if(!any(!is.finite(uug))){#all class names are convertivle to numeric
     #reorder unique colors and unique names
-    Colors=Colors[indBig2Small]
+    n_color=length(Colors)
+    if(length(indBig2Small)==n_color){
+      Colors=Colors[c(indBig2Small)]
+    }#typical case
+    if(length(indBig2Small)<n_color){
+    #special case under the assumptuion that colors are named
+      #then more colors than classes are allowed
+      #in that case just the first colors are reordered
+      Colors=Colors[c(indBig2Small,setdiff(1:n_color,indBig2Small))]
+    }
     if(!is.null(Names)){
       NamesOrdered=c() 
       u_names=u_names[indBig2Small]
@@ -120,22 +159,50 @@ Classplot = function(X, Y, Cls,
       pch=pchordered
     }
     
-    u=unique(Cls)
-    #uu=sort(u,decreasing = F)
+    uniqueLabels=unique(Cls)
+    #uu=sort(uniqueLabels,decreasing = F)
   }#otherwise some class was not convertable to numeric
 
   # print(u_names)
-  # print(u)
+  # print(uniqueLabels)
   # print(Colors)
   # print(uu)
   # 
   ColorVec=Cls*0
   k=1
-  for(i in u){
-    ColorVec[Cls==i]=Colors[k]
-    k=k+1
-  }
   
+  if(is.null(names(Colors))){#default color vec is not named
+    for(i in uniqueLabels){
+      ColorVec[Cls==i]=Colors[k]
+      k=k+1
+    }
+  }else{#user named color vec
+    class_color=as.numeric(names(Colors))
+    # print(class_color)
+    # print(uniqueLabels)
+    # print(uniqueLabels %in% class_color)
+    if(sum(is.finite(class_color))>=length(uniqueLabels)){#for multipleplots there could be more colors defined
+      if(sum(uniqueLabels %in% class_color)==length(uniqueLabels)){
+        for(i in class_color){
+          ColorVec[Cls==i]=Colors[k]
+          k=k+1
+        }
+      }else{
+        warning("Classplot: Names of 'Colors' do not contain all digit labels of 'Cls'. Falling back to default 1:k color sequence.")
+        for(i in uniqueLabels){
+          ColorVec[Cls==i]=Colors[k]
+          k=k+1
+        }
+      }
+    }else{
+      warning("Classplot: Names of 'Colors' have to be digits that can be finitely conversed to numeric")
+      for(i in uniqueLabels){
+        ColorVec[Cls==i]=Colors[k]
+        k=k+1
+      }
+    }
+
+  }
   if(missing(Plotter)){
     if(is.null(Names)){
       Plotter="plotly"
@@ -179,8 +246,8 @@ Classplot = function(X, Y, Cls,
    
   if(!is.null(Names)){
     UniqueNames = u_names
-    for(i in 1:length(u)){
-      DataIdx = which(Cls == u[i])
+    for(i in 1:length(uniqueLabels)){
+      DataIdx = which(Cls == uniqueLabels[i])
       p = plotly::add_markers(p = p,
                               x = X[DataIdx],
                               y = Y[DataIdx],
@@ -193,17 +260,33 @@ Classplot = function(X, Y, Cls,
                                                         width = borderWidth)))
     }
   }else{
-    p = plotly::add_markers(p = p,
-                            x = X,
-                            y = Y,
-                            type = "scatter",
-                            mode = "marker",
-                            marker = list(size = Size,
-                                          color = Colors[Cls],
-                                          line = list(color = PointBorderCol,
-                                                      width = 1)))
+    if(is.null(Colors)){
+      p = plotly::add_markers(p = p,
+                              x = X,
+                              y = Y,
+                              type = "scatter",
+                              mode = "marker",
+                              marker = list(size = Size,
+                                            color = Colors[Cls],
+                                            line = list(color = PointBorderCol,
+                                                        width = 1)))
+    }else{
+      for(i in 1:length(uniqueLabels)){
+        DataIdx = which(Cls == uniqueLabels[i])
+        p = plotly::add_markers(p = p,
+                                x = X[DataIdx],
+                                y = Y[DataIdx],
+                                type = "scatter",
+                                mode = "marker",
+                                marker = list(size = Size,
+                                              color = unique(ColorVec[DataIdx]), #unique(ColorVec[DataIdx])
+                                              line = list(color = PointBorderCol,
+                                                          width = borderWidth)))
+      }
+    }
+
   }
-  
+  if(Legend != ""){
   p <- plotly::layout(p,
                       legend = list(title = list(text = Legend)),
                       title = main,
@@ -218,6 +301,23 @@ Classplot = function(X, Y, Cls,
                                    linewidth = 1,
                                    zeroline  = FALSE,
                                    mirror    = TRUE))
+  }else{
+    
+    p <- plotly::layout(p,
+                        title = main,
+                        showlegend = FALSE,
+                        margin = list(l = 20, r = 0, b = 0, t = 70, pad = 10),
+                        xaxis = list(title     = xlab,
+                                     showgrid  = Showgrid,
+                                     linewidth = 1,
+                                     zeroline  = FALSE,
+                                     mirror    = TRUE),
+                        yaxis = list(title     = ylab,
+                                     showgrid  = Showgrid,
+                                     linewidth = 1,
+                                     zeroline  = FALSE,
+                                     mirror    = TRUE))
+  }
 
   p
 

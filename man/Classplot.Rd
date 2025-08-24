@@ -9,7 +9,7 @@ Allows to plot one time series or feauture with a classification as a labeled sc
 The colors are the labels defined by the classification.
 }
 \usage{
-Classplot(X, Y, Cls, Plotter,Names = NULL, na.rm = FALSE, 
+Classplot(X, Y, Cls, Plotter,Names = NULL, Subsample=TRUE, na.rm = FALSE, 
 
 xlab = "X", ylab = "Y", main = "Class Plot", Colors = NULL,
 
@@ -35,8 +35,12 @@ Nudge_x_Names = 0, Nudge_y_Names = 0, Legend = "", SmallClassesOnTop = TRUE,
 [1:n] numeric vector of k classes, if not set per default every point is in first class
 }
   \item{Names}{
-[1:n] character vector of k classes, if not set per default Cls is used, if set, names the legend and the points
+Either [1:n] character vector of k classes, or [1:k] character vector defining the k names, one per class, vector has to be named by class labels. If not set, per default Cls is used, if set, names the legend and the points.
 }
+  \item{Subsample}{Boolean, default TRUE,if TRUE and n>5000 takes optimal subsample for the visualization so that not too much points overlap}
+  
+  
+
   \item{na.rm}{Function may not work with non finite values. If these cases should be automatically removed, set parameter TRUE}
   
   \item{xlab}{
@@ -49,7 +53,7 @@ Optional, string for ylabel
 Optional, string for title of plot
 }
   \item{Colors}{
-Optional, [1;k] string defining the k colors, one per class
+Optional, [1:k] string defining the k colors, one per class, Vector can be named by class labels than colors are matched to specific labels instead of 1:k ordering
 }
   \item{AnnotateIt}{
 Optional, in case of \code{Plotter==ggplot} and given \code{Names} annotates each point if TRUE
@@ -145,6 +149,26 @@ ind=sample(1:nrow(Lsun3D$Data),20)
 Classplot(Lsun3D$Data[ind,1],Lsun3D$Data[ind,2],Lsun3D$Cls[ind],
 Names = rownames(Lsun3D$Data)[ind],Size =1,
 Plotter = "ggplot2",AnnotateIt = TRUE)
+
+#non 1:k ordered sequence
+#of user specific colors
+Colors=c("blue","green","red")
+names(Colors)=c(3,2,1) #non 1:k ordering
+
+Classplot(Lsun3D$Data[ind,1],Lsun3D$Data[ind,2],Lsun3D$Cls[ind],
+Names = rownames(Lsun3D$Data)[ind],Size =1,
+Plotter = "ggplot2",AnnotateIt = TRUE,Colors=Colors)
+
+#if named vector is used, user is 
+#allowed to define more colors than labels
+#given for current plot in case of
+#multiple plots with standardized labels
+Colors=c("blue","green","red","yellow")
+names(Colors)=c(1,2,3,4) #1:(k+1) ordering
+
+Classplot(Lsun3D$Data[ind,1],Lsun3D$Data[ind,2],Lsun3D$Cls[ind],
+Names = rownames(Lsun3D$Data)[ind],Size =1,
+Plotter = "ggplot2",AnnotateIt = TRUE,Colors=Colors)
 }
 
 \donttest{
@@ -158,3 +182,4 @@ Names = paste0("C",Lsun3D$Cls),Size =2,Legend ="Classes")
 % R documentation directory.
 \keyword{Classplot}% use one of  RShowDoc("KEYWORDS")
 \keyword{dotplot}% use one of  RShowDoc("KEYWORDS")
+\concept{Scatter plot}% use one of  RShowDoc("KEYWORDS")

@@ -46,7 +46,7 @@ If the plotting backend does support it, this will return a handle for the gener
 data("Lsun3D")
 Data=Lsun3D$Data
 if(exists("zplot", where = asNamespace("DataVisualizations")))
-      DataVisualizations::zplot(Data[,1],Data[,2],Data[,3])
+      DataVisualizations:::zplot(Data[,1],Data[,2],Data[,3])
 }
 }
 \author{
