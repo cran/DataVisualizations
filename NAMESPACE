@@ -11,7 +11,7 @@ export(Classplot)
 export(ClassBarPlot)
 export(ClassPDEplotMaxLikeli)
 export(Crosstable)
-export(Choroplethmap)
+#export(Choroplethmap)
 export(CombineCols)
 export(CombineRows)
 export(cbind_fill)
@@ -35,6 +35,7 @@ export(Meanrobust)
 export(MAplot)
 export(MDplot)
 export(MDplot4multiplevectors)
+export(MDstrips)
 export(Multiplot)
 export(OptimalNoBins)
 
@@ -42,9 +43,11 @@ export(Pixelmatrix)
 export(ParetoDensityEstimation)
 export(ParetoRadius)
 export(ParetoRadius_fast)
+
 export(Piechart)
 export(PDEplot)
 export(PDEnormrobust)
+export(PDEstrip)
 export(Plot3D)
 export(PlotGraph2D)
 export(PlotProductratio)
@@ -80,6 +83,8 @@ importFrom("stats", "ecdf", "dist", "runif", "median", "quantile", "qqnorm", "en
            "pnorm", "rnorm","ks.test", "qt")
 importFrom("utils", "data", "head", "tail")
 importFrom("stats", "aggregate")
+
+
 
 
 

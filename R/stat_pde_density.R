@@ -1,7 +1,6 @@
 stat_pde_density <- function(mapping = NULL,
                              data = NULL,
                              geom = "violin",
-                             bounds = bounds,
                              position = "dodge",
                              ...,
                              trim = TRUE, #enden des violins werden korrekt angezeigt und nicht ueber den wertebereich fortgesetzt
@@ -9,7 +8,7 @@ stat_pde_density <- function(mapping = NULL,
                              na.rm = FALSE,
                              show.legend = NA,
                              inherit.aes = TRUE) {
-  
+  #geom_violin(stat = "PDEdensity", scale = MDscaling, size = LineSize, trim = TRUE, fill = Fill, colour = LineColor)
   scale <- match.arg(scale, c("area", "count", "width"))
   
   ggplot2::layer(
@@ -24,7 +23,6 @@ stat_pde_density <- function(mapping = NULL,
       trim = trim,
       scale = scale,
       na.rm = na.rm,
-      bounds = bounds,
       ...
     )
   )

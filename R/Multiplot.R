@@ -96,7 +96,7 @@ Multiplot <- function(..., Plotlist=NULL, ColNo=1, LayoutMat, Plotter="native", 
         )
       )
     ))
-      grid::grid.text(main, y = grid::unit(0.98, "npc"), gp = grid::gpar(fontsize=main_fontsize, fontface="bold"))
+      grid::grid.text(main, y = unit(0.98, "npc"), gp = grid::gpar(fontsize=main_fontsize, fontface="bold"))
     
     # Print each plot at its (row, col), offset by the title row (+1)
     for (i in 1:numPlots) {

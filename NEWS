@@ -1,0 +1,241 @@
+Version 1.4.0 (GitHub, 2025-10-01)
+	o Reimplementing ParetoRadius_fast for  up to 10 times speed up
+	o Simplifying ParetoRadius so that only one set of Cpp functions is used, all others are disregarded
+	o Streemlining ParetoDensityEstimation to work better with ParetoRadius_fast and ParetoRadius
+	o Provided MDstrips function for high-dimensional data (d>100) in case single violings are not visible in MDplot
+	o MDplot: Due to the changes in ParetoRadius_fast, ParetoRadius and ParetoDensityEstimation, the MDplot is now 5 times faster, externelized code in helper function
+	o Choroplethmap() function is depricated as it yields errors for simple examples
+	
+Version 1.3.5 (CRAN, 2025-08-24)
+	o Bugfix in Classplot for plotly. Now points are colored if no names are given and legend can be disabled
+	o Multiplot can now have a title via main argument
+	o ParetoRadius_fast function implemented using the same algorithm as ParetoRadius, but slightly more fast although sometime maybe not so stable
+	
+Version 1.3.4 (GitHub, 2025-02-14)
+	o Classplot takes now sample for visualization if more than 5000 points are used. Sample plottet is optimal regarding visualization.
+	o Classplot accepts now named Colors parameter for non ordered user specific colors for each label of Cls
+	o bugfix in CombineRows
+	o PlotGraph2D is now faster by transfering code to cpp
+	
+Version 1.3.3 (CRAN, 2025-01-26)
+	o Classplot plots now small classes on top, if boolean SmallClassesOnTop is set true
+	o Meanrobust and Stdrobust accept now both trim parameters in percent
+	o PDEnormrobust input parameters extended to set two and three sigma environment 
+	o ParetoDensityEstimation warnings corrected if data exists outside of user set kernels
+	o ClassBarPlot function plots values for each class and instance as bar plot with optional error deviation
+	o ROC function plots the receiver operating characteristic curve in plotly
+	
+Version 1.3.2 (CRAN, 2023-10-10)
+	o ClassMDplot now allows to set the color if each violin
+	o Fanplot and Piechart: changed color palette
+	o Fanplot: corrected plotrix function so that colors are mapped more consistently 	
+	o InpectVariable: xlim can now be set for optimal histogram and not only for PDEplot	
+	o Moved RobustNormalization and RobustNorm_BackTrafo from DatabionicSwarm package available on CRAN
+	o Provids first crude version of combining several plots in one layout called Multiplot
+	
+Version 1.3.1 (GitHub, 2023-07-17)
+	o Added access to Meanrobust and Stdrobust for users
+	o Multiplot now does not plot single plots if output is not saved with function call.
+	
+Version 1.3.2 (CRAN, 2023-10-10)
+	o ClassMDplot now allows to set the color if each violin
+	o Fanplot and Piechart: changed color palette
+	o Fanplot: corrected plotrix function so that colors are mapped more consistently 	
+	o InpectVariable: xlim can now be set for optimal histogram and not only for PDEplot	
+	o Moved RobustNormalization and RobustNorm_BackTrafo from DatabionicSwarm package available on CRAN
+	o Provides first crude version of combining several plots in one layout called Multiplot
+		
+Version 1.3.1 (CRAN, 2023-07-18)
+	o Minor adaptations for CRAN
+	o Switched to new internal API of ScatterDensity for DensityScatter
+	
+Version 1.3.0 (GitHub, 2023-07-17)
+	o DensityScatter: subfunctions externalized in addon package DensityScatter which provides an improved visualization of two-dimensional structures
+	o DensityContour: now extracted from former DataVisualizations::DensityScatter function to plot only 2D or 3D contour maps of two-dimensional density estimation
+	o Classplot: points are now presented in order of class size, i.e., small classes are plotted last, hence on top, to be always visible. Names for plotly fixed.
+	o PlotGraph2D: plotly optionality added.
+	o DefaultColorSequence: switched yellow with gold, and yellow with gray42, removed duplicates.
+	
+Version 1.2.5 (GitHub, 2023-04-27)
+	o PlotGraph2D plots verticex and edges based on adjacency matrix and 2D points
+	o ClassErrorbar: Plots errorbars at Xvalue positions for one or more than one classes with user means and defined whiskers
+	o Bugfix Inspectvariable: on.exit() is now used to give bad user predefined plotting parameters
+	
+Version 1.2.4 (GitHub, 2023-03-28)
+	o DensityScatter: Reimplemted method for option native. IT now plots densities as well as scatter plot instead of only a density-based contour.
+	o Bugfix Inspectvariable: PDE plot ylim starts now in zero.
+	o Improved InspectVariable() by reducing margins and integrating QQplot()
+	o Integrated lwd and pch optionality in QQ-plot function
+	o Improved QQplot() by using internally the quantile() function instead approx()
+    o Added legend to Classplot() for all plotters and symbols in case of native and ggplot2
+    o Created an error bar plot function using ggplot2 for more than one method
+    o Bugfix: Fanplot now accepts the correct amount of colors set by the user. In addition, Fanplot allowes further argument for ploygon
+	
+Version 1.2.3 (CRAN, 2022-05-21)
+	o ParetoDensityEstimation(): If user sets kernels, the function is implemented by using function approximation instead of using these kernels for the internal density estimaton.
+	o Changed design choice in ParetoDensityEstimation(): If user sets kernels incorrectly, intead of correcting kernels, the density is now estimated incorrectly and a message is given back.
+	o Classplot: Als to color mapping is now based on consecutive numbers of Cls instead of order of appearance in Cls
+	o Bugfix ParetoDensityEstimation() for big data with high peaks: sometimes the pareto radius is estimated too small if data size is above 10e5 because sample size for pareto radius estimation gets below 10 percent. In this case, not all data points lie within a pareto radius and the density is not estimated correctly. To fix this: Instead of one sample, multiple samples are taken in this case to estimate an average pareto radius.
+	o Improvements: MD-plot now allows the possiblity to force non-conventional names of columns at the risk that plotting may not work correctly. Moreover the boolean BW can be set to switch between the visualization on the screen and an automatic black and white background for paper. Additionaly, the centered title of the plot and ylabel can be set swiftly.
+	o Improvements: Serveral function now show the name(s) of variable(s) per default as xlabel and ylabel
+	o Improvements: MA-plot provides now optionally confidence intervalls and limits of agreement and user either Classplot or DensityScatter
+	o Standardized Output of DensityScatter using captial X and captial Y instead of x and y
+	o Bugfix Classplot(): plots the colors of the points now correctly for Plotter="native" 
+	o Bugfix Classplot(): colors of points are now consecutively mapped to labels of Cls
+	
+Version 1.2.2 (CRAN, 2021-01-12)
+	o Bugfix of ClassNames for ClassMDplot
+	o ParetoRadius now checks suggested namespace and falls back if package does not exist instead of getting an error
+	o ParetoDensityEstimation now checks suggested namespace and falls back to R base if package does not exist instead of getting an error
+	o Namespaces fallbacks or bugfixes in case that suggested packages are not installed for the following functions:  ABCbarplot, Choroplethmap, Classplot, DensityScatter, DualaxisLinechart, Fanplot, GoogleMapsCoordinates, Heatmap, InspectDistances, MDplot, PDEscatter, Silhouetteplot, Worldmap, zplot
+	
+Version 1.2.1 (CRAN, 2020-10-27)
+	o Major Bugifx for MDplot, we forgot to disable horizontal jittering of points priorly, this is fixed now.
+	o Reimplemented ClassMDplot based on the published version of the MDplot. Violins do not have a color depending on the class yet, because we do not know how to implement this feature at the moment.
+	o Stale sp data objects of wolrd_copuntry_polygons.rda were rebuild and updated using new sp package.
+	
+Version 1.2.0 (CRAN, 2020-08-04)
+	o Standardized Output of PDEscatter
+	o Introduced SmoothedDensitiesXY for a very fast density estimation in case of large two-dimensional datasets.
+	o Generalized PDEscatter to a new function called DensityScatter with the two density estimation options PDE and SDH.
+	o Renamed ShepardPDEScatter to ShepardDensityScatter using "SDH" density estimation.
+	o InspectCorrelation added as shortcut to inspect correlations.
+	o Heatmap: Due to scientific reviews, documentation is elaborated and visualisation is now clearer.
+	o bugfixes MDplot: multiple missing column names declared as "" can now be plotted; disabled for R 4.0.x manual jittering as geom_jitter does it now properly; RobustGaussian=TRUE now does not give the warning "Computation failed in `stat_ydensity()`:replacement has 1 row, data has 0"  which priorly sometimes was written in console and was irritating because density estimation was always properly performed.
+
+Version 1.1.13 (GitHub, 2020-06-17)
+	o Fanplot and pieChart colors are defined by length of labels.
+	o PDEscatter: Implemented several error catches and enabled two options of drawing a sample depending on the size of data.
+	o Classplot: Implemented several error catches and fixed bug in case of NaN values and given Names.
+
+Version 1.1.12 (CRAN, 2020-05-10)
+	o Bugfix MDplot for Ordering Bimodal in BimodalityAmplitude and improved nameing for two input parameters for MDplot.
+	o Improvement Classplot: ggplot2 added and if names exist, a switch to ggplot is taken per default because overlapping in long names can be avoided there.
+
+Version 1.1.11 (GitHub, 2020-03-02)
+	o Improvement of efficiency of ParetoDensityFunction using Rcpp by reducing computing time around 80 percent. Improvement is passed on to MDplot.
+	o Classplot: Missing values can be now removed with na-rm=TRUE, fixed feature checks, LineColor is now per default invisible in this dot plot, Names for points and size of points can be set optionally (in case of using this plot to visualise a Receiver operating characteristic (ROC) with/without its curve).
+	o bugfix: Heatmap and InspectDistances: using unname in isSymmetric to check correctly of symmetric distance matrix.
+	o bugfix: PDEplot y-axis should always start with zero because this functions plots the density.
+	o bugfix: SignedLog besides strings, now also accepts numerical values correctly for the Base argument.
+	o bugfix: Fanplot and Piechart now labels <0.01% correctly.
+	o bugfix: ParetoDensityEstimation ensures now that all data is contained in a Pareto ball even if pretty does not set the breaks from min to max. This resulted priorly in an incorrect density estimation in the special case of more than one mode of data with one mode consisting of unique data points lying exactly on on of the two borders of data (either min or max) in the case of an existing empty space between the unique values and the other mode of data.
+	o BimodalityAmplitude enables to order the MDplot using the bimodality coefficient of [Zhang, 2003] using the PDE.
+
+Version 1.1.11 (CRAN, 2020-02-13)
+	o Bugfix: Missing rgl packages in solaris combined with a CRAN check of Plot3D does not allow the package to install itself
+	o CombineCols: Robust alternative to \code{\link{cbind}} that fills missing values with nan instead of extending length of vector by duplicating elements
+
+Version 1.1.10 (CRAN, 2020-02-02)
+	o DualaxisLinechart works now in combination with plotly::subplot ommitting the bug of subplot, see https://github.com/ropensci/plotly/issues/954
+	o MDplot has now two new sorting options for columns: increasing average or variance, or decreasing bimodality (using packages modes).
+	o Bugfix: MDplot bug fixed in case of two columns of which one is only NaN and in case of jittered not-finite values.
+	o Bugfix: ParetoDensityEstimationV2 bug for data with only two unique values fixed.
+	o Bugfix: MDplot4multiplevectors: rowr is depricated, hence the relevant function is internally integrated now in MDplot4multiplevectors
+	o Naming Convention: delted V2 in ParetoDensityEstimation, ParetoRadius and OptimalNoBins because these functions are now completly removed from the AdaptGauss package.
+
+Version 1.1.9 (CRAN, 2019-11-10)
+	o Improvements in ClassMDplot in the case of Big Data (e.g. Flow Cytometry data of CLL)
+	o bugfix ABCbarplot: x-axis shows now correct prozentual values between 1 and 100.
+	o Pixelmatrix is now significantly fast by using geom_raster instead of geom_tile.
+	o Bugfix MDplot: Several whitespread unique values in large data vectors are visualized correctly. Option "RobustGaussian=TRUE" now works also if only one column of data is given as input.
+	o Bugfix ParetoDensityEstimationV2: Assumes now the dirac delta distribution for one ore two unique values in a given vector of data of arbitrary length.
+	o All density estimation based function are now faster because Rcpp is used for the bottleneck stats function.
+	o zplot: Changed interpolation from akima to MBA due to licensing issues with akima, see https://www.user2017.brussels/uploads/bivand_gebhardt_user17_a0.pdf
+	o Bugfix MDplot: Blanks in colnames are caught and replaced by numbers.
+
+Version 1.1.8 (CRAN, 2019-08-20)
+	o new implementation of Pareto density estimation (PDE), pareto radius and optimal number of bins for histograms.
+	o AdaptGauss package detached and new PDE attached to MD plot.
+	o ABCbarplot: Barplot with Sorted Data Colored by ABCanalysis which can be also used as a scree plot.
+	o Several minor documentatio corrections and bugfixes.
+
+Version 1.1.7 (GitHub, 2019-04-17)
+	o Bugfix: In MD-plot Jitter Plot for colomuns with one unique value, in the case it is zero, corrected.
+	o Bugfix: In MD-plot statistical cases for colomuns with one unique value but more than 45000 cases corrected.
+	o Bugfix: In MD-plot does not crash anymore if columns exists with not one finite values but data has more cases than the sample size.
+	o Bugfix: Namespace of AdaptGauss package added for Pareto density estimation
+	o Bugfix: Regression line in QQplot fixed.
+
+Version 1.1.6 (CRAN, 2019-03-08)
+	o Major Improvement: The MD-plot samples now data automatically above an threshold in order to be usuable for Big Data.
+	o Bugfixes: In MD-plot the testing against uniform distribution now works also for one feauture. A crash is fixed where a columns has not even one finite value.
+	o Bugfix: If colnames of Data are given in MD-plot but not unique, they are renamed to unique colnames.
+	o Bugfix: Plot3D checks now that the length of Cls is equal to the number of rows of data.
+	o Bugfix: ClassPDEplot did not plot all pdfs for SameKernelsAndRadius=0.
+	o Improvement: ClassMDplot now jitters points instead of visualizing pdf if not enough data in class is given.
+	o Bugfix: In Heatmap the x labels are now plotted correctly.
+	o Bugfix: In ClassMDplot class names now work correctly.
+	o Classplot and DualClassplot: Functions allow to plot one or two time series with a classification as scatter plots or line and scatter plots. Usefull to see if temporal clustering has time dependent variations and for Hidden Markov Models (see Mthrun/RHmm on GitHub).
+	
+Version 1.1.5 (CRAN, 2019-02-02)
+	o Bugfix: The statistical testing in the MD-plot now is omitted if not enough unique values are given in some features. In such a case, only a scatter plot is plotted.
+	o Naming Convention: Standardized plotting functions by removing "plot" in names except cases where it is conventional in other sources, e.g. MAplot. Older function names will be removed in the next CRAN version.
+						o  plotWorldmap renamed to Worldmap
+						o  plotChoroplethMap renamed to Choroplethmap
+						o  ClassBoxPlot renamed to ClassBoxplot
+						o  fanPlot renamed to Fanplot
+						o  pieChart renamed to Piechart
+						o  CrossTablePlot renamed to Crosstable
+						o  slopeChart renamed to Slopechart
+						o  plot3D renamed to Plot3D
+						o  InspectScatterOfData renamed to InspectScatterplots
+						o  PixelMatrixPlot renamed to Pixelmatrix
+						o  ShepardScatterPlot renamed to Sheparddiagram
+						o  ShepardDensityPlot renamed to ShepardPDEscatter
+						o  DualAxisLineChart renamed to DualaxisLinechart
+						o  SilhouettePlot renamed to Silhouetteplot
+						o  BoxplotData renamed to InspectBoxplots
+						o  QQplotWithFit renamed to QQplot
+	o nanPlot is deprecated. The new function is PlotMissingvalues.
+	o ClassViolinPlot is deprecated. The new function is ClassMDplot.
+
+Version 1.1.4 (GitHub, 2018-11-17)
+	o SignedLog: Allows to transform negativ values with logarithm.
+	o Improvement: MD-plot allows for Scaling and Ordering of data and plots scattered points if a column has not enough values to perform density estimation.
+	o Bugfix: stat_pde_density now works  for only one value if other values are NaN.
+	
+Version 1.1.4 (CRAN, 2018-10-21)
+	o DualAxisLineChart enables to visualize to lines in one plot overlaying them using ploty (e.g. two time series with two ranges of values)
+	o Bugfix: PDEscatter now removes non-numeric values with na.rm=TRUE before xlim and ylim are defined
+	o ProductRatioPlot: The plot is useful in the case where there are many instances of very small values, but a small number of very large ones
+	o CrossTablePlot: Presents a heatmap with values and a cross table of given Data matrix of two features and a bin width or percentualized values
+	o Update: plot3D function and documentation improved.
+	
+Version 1.1.3 (GitHub, 2018-07-07)
+	o Improvement: MD-plot layout changes and plotting paramater added.
+	o InspectCorrelation now visualizes the density and calcluates the spearman correlation index as a shortcut to PDEscatter.
+	o Minor bugifx: MD-plot now uses ggExtra::rotateTextX() for better xaxis alignment of text.
+	
+Version 1.1.2 (GitHub, 2018-07-02)
+	o Bugfix: InspectDistances methods argument now passed on to parallelDist::parDist.
+
+Version 1.1.1 (CRAN 2018-06-30)
+	o Improved visualization of MD-plot.
+	
+Version 1.1.0 (GitHub)
+    o Vignette generated.
+	o Bugfix: authors stated in Description regarding functions which were used in other dbt packages instead of this package.
+	
+Version 1.0.9 (GitHub)
+    o ClassViolinPlot build on top of stat_pde_density for Data with Clustering.
+    o Bugfix in stat_pde_density for special case of one value.
+	o parallelDist integrated for faster distance computations.
+	
+Version 1.0.8 (GitHub)
+    o Bugfix in stat_pde_density for special case of one value.
+	o Minor bugfix in PDEscatter.
+	
+Version 1.0.7 (GitHub)
+    o MD-plot: stat_pde_density added in order to integrate concept with ggplot2.
+
+Version 1.0.1-1.0.6 (GitHub)
+    o ClassBoxPlot function added for Data with Clustering.
+	o ClassPDEplot function added for Data with Clustering.
+	o ClassPDEplotMaxLikeli function added for Data with Clustering.
+	o Minor bugfix in InspectVariable function.
+	o Bugfix in internpiechart.
+
+Version 1.0.0 (CRAN, 2018-05-06)
+    o Complete package generated.
+
